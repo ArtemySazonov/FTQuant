@@ -1,0 +1,6 @@
+#ifndef FTQUANT_LIBRARY_H
+#define FTQUANT_LIBRARY_H
+
+
+
+#endif //FTQUANT_LIBRARY_H
