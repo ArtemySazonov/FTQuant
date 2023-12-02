@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['add_0',['add',['../library_8cpp.html#aa99823a0fc8313c9c32541ce768fb801',1,'library.cpp']]]
+  ['blacksholes_0',['BlackSholes',['../class_black_sholes.html',1,'']]],
+  ['blacksholes_2ecpp_1',['BlackSholes.cpp',['../_black_sholes_8cpp.html',1,'']]],
+  ['blacksholes_2ehpp_2',['BlackSholes.hpp',['../_black_sholes_8hpp.html',1,'']]]
 ];

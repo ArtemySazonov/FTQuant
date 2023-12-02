@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['main_2ecpp_0',['main.cpp',['../main_8cpp.html',1,'']]]
+  ['ftqlib_2ecpp_0',['ftqlib.cpp',['../ftqlib_8cpp.html',1,'']]],
+  ['ftqlib_2ehpp_1',['ftqlib.hpp',['../ftqlib_8hpp.html',1,'']]]
 ];

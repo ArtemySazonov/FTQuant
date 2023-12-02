@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['main_0',['main',['../main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main.cpp']]]
+  ['price_0',['price',['../ftqlib_8cpp.html#ac1ec399bdd2b9dae38c15330ec591f8c',1,'ftqlib.cpp']]]
 ];
