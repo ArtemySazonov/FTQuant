@@ -1,4 +1,5 @@
 #include <ftqlib.hpp>
+#include <SyntaxParser.hpp>
 
 int main()
 {

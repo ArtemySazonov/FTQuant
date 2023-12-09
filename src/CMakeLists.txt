@@ -1,6 +1,4 @@
-set(SOURCES main.cpp)
-
-include_directories(${Boost_INCLUDE_DIRS})
+set(SOURCES main.cpp SyntaxParser.cpp)
 
 add_executable(FTQS ${SOURCES})
 target_link_libraries(FTQS PRIVATE

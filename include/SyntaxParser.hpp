@@ -1,0 +1,10 @@
+#ifndef FTQUANT_SYNTAXPARSER_HPP
+#define FTQUANT_SYNTAXPARSER_HPP
+
+
+class SyntaxParser {
+
+};
+
+
+#endif //FTQUANT_SYNTAXPARSER_HPP

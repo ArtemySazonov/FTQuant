@@ -12,7 +12,10 @@ target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
 enable_testing()
 
-add_executable(unit_tests utest.cpp)
+add_executable(unit_tests
+        u_ftqlib.cpp
+        u_SyntaxParser.cpp
+)
 
 target_link_libraries(unit_tests PRIVATE
         GTest::GTest
