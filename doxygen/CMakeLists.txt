@@ -13,7 +13,6 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_SORT_BY_SCOPE_NAME YES)
     set(DOXYGEN_SORT_MEMBER_DOCS YES)
     set(DOXYGEN_SOURCE_BROWSER YES)
-    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/cmake-build-debug/docs")
 
     message(STATUS "Doxygen:                  ${DOXYGEN_EXECUTABLE}")
     message(STATUS "Doxygen version:          ${DOXYGEN_VERSION}")

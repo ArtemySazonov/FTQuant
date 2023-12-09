@@ -1,9 +1,11 @@
 add_library(ftqlib
-        ftqlib.cpp
+        # Base class implementation files
+        MonteCarlo.cpp
+        PartialDiffEq.cpp
 
         # Model implementation files
         BlackSholes.cpp
         LocalVolatility.cpp
-        Heston.cpp
+        HestonStochastic.cpp
 )
 target_include_directories(ftqlib PUBLIC "../include/")

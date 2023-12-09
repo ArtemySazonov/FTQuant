@@ -46,7 +46,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './cmake-build-debug/docs/html'
+          path: './cmake-build-debug/doxygen/html'
 
       - name: Deploy to GitHub Pages
         id: deployment
