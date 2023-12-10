@@ -52,7 +52,7 @@ Command::Command(std::string com) {
 
       if (Fields.count(w)) {
         if (!flag) {
-          _keyNumbers[w] = 0;
+          _key_numbers[w] = 0;
           flag = 1;
           temp = w;
         }
@@ -61,7 +61,7 @@ Command::Command(std::string com) {
 
       if (flag == 1) {
         if (isDouble(w))
-          _keyNumbers[temp] = std::stod(w);
+          _key_numbers[temp] = std::stod(w);
         else {
           std::cout << "cant convert " << w << " in double \n";
         }
@@ -70,7 +70,7 @@ Command::Command(std::string com) {
     }
 
     for (const auto& w : RequiredFields[_code]){
-        if(!_keyNumbers.count(w)){
+        if(!_key_numbers.count(w)){
             _code = INVALID_COMMAND;
 
             // std::cout << "bed things: there is not " << w <<'\n';
@@ -92,16 +92,16 @@ int Command::execute()
         break;
 
     case BLACK_SCHOLES:
-        std::cout << "BlackScholes model(_keyNumbers[\"INTEREST_RATE\"], _keyNumbers[\"SIGMA\"]); \n";
+        std::cout << "BlackScholes model(_key_numbers[\"INTEREST_RATE\"], _key_numbers[\"SIGMA\"]); \n";
         break;
     
     case GENERATE_TRAJECTORIES:
-        std::cout << "traj = model.generateTrajectories(_keyNumbers[\"TRAJECTORIES_NUMBER\"], _keyNumbers[\"STEPS_NUMBER\"]); \n";
+        std::cout << "traj = model.generateTrajectories(_key_numbers[\"TRAJECTORIES_NUMBER\"], _key_numbers[\"STEPS_NUMBER\"]); \n";
         trajectories_generated = 1;
         break;
 
     case EURO_PUT:
-        std::cout << "EuroPut(_keyNumbers[\"STOCK_PRICE\"], _keyNumbers[\"STRIKE\"]) \n";
+        std::cout << "EuroPut(_key_numbers[\"STOCK_PRICE\"], _key_numbers[\"STRIKE\"]) \n";
         if(!trajectories_generated) {
             std::cout << "model.generateTrajectories(100, 1000)\n";
         }
@@ -109,7 +109,7 @@ int Command::execute()
         break;
 
     case EURO_CALL:
-        std::cout << "EuroPut(_keyNumbers[\"STOCK_PRICE\"], _keyNumbers[\"STRIKE\"]) \n";
+        std::cout << "EuroPut(_key_numbers[\"STOCK_PRICE\"], _key_numbers[\"STRIKE\"]) \n";
         if(!trajectories_generated) {
             std::cout << "model.generateTrajectories(100, 1000)\n";
         }
@@ -126,7 +126,7 @@ int Command::execute()
 std::ostream &operator<<(std::ostream& os, const Command& C) {
     std::cout << "code: " << C._code << std::endl;
     std::cout << "keyNumbers: ";
-    for (const auto& [key, value] : C._keyNumbers)
+    for (const auto& [key, value] : C._key_numbers)
       std::cout << '[' << key << "] = " << value << "; ";
 
     std::cout << std::endl;
