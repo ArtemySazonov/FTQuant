@@ -40,14 +40,18 @@ bool isDouble(const std::string& str);
 class Command {
  public:
   int _code;
-  std::map<std::string, int> _key_numbers;
+  std::map<std::string, double> _key_numbers;
 
  public:
   Command() : _code(Commands["INVALID_COMMAND"]) {}
 
   Command(std::string com);
 
-  int execute();
+  int execute() const;
+
+  int code() const;
+
+  std::string to_json() const;
 
   friend std::ostream& operator<<(std::ostream& os, const Command& C);
 };

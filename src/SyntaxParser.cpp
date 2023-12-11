@@ -17,15 +17,15 @@
 #include <string_view>
 #include <vector>
 
+#include <gtest/gtest.h>
+
 #include "../include/SyntaxParser.hpp"
 
 bool isDouble(const std::string& str) {
   std::istringstream iss(str);
   double d;
-  iss >> std::noskipws >>
-      d;  
-  return iss.eof() &&
-         !iss.fail();  
+  iss >> std::noskipws >> d;
+  return iss.eof() && !iss.fail();
 }
 
 Command::Command(std::string com) {
@@ -41,6 +41,7 @@ Command::Command(std::string com) {
     _code = Commands[word];
   } else {
     _code = Commands["INVALID_COMMAND"];
+    return;
   }
 
   while (ss >> word) {
@@ -64,6 +65,8 @@ Command::Command(std::string com) {
         _key_numbers[temp] = std::stod(w);
       else {
         std::cout << "cant convert " << w << " in double \n";
+        _code = INVALID_COMMAND;
+        return;
       }
       flag = 0;
     }
@@ -78,7 +81,11 @@ Command::Command(std::string com) {
   }
 }
 
-int Command::execute() {
+int Command::code() const {
+  return _code;
+}
+
+int Command::execute() const {
   double r = 0;
   double sigma = 1;
   int trajectories_generated = 0;
@@ -124,6 +131,17 @@ int Command::execute() {
       break;
   }
   return 0;
+}
+
+std::string Command::to_json() const {
+  std::string json = "{";
+  json += "code: " + std::to_string(_code) + ", " + "keyNumbers: ";
+  for (const auto& [key, value] : _key_numbers)
+    json += '[' + key + "] = " + std::to_string(value) + "; ";
+
+  json += '}';
+
+  return json;
 }
 
 std::ostream& operator<<(std::ostream& os, const Command& C) {
