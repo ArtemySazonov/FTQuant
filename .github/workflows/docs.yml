@@ -34,7 +34,7 @@ jobs:
       - name: Configure Project
         uses: threeal/cmake-action@v1.3.0
         with:
-          build-dir: cmake-build-debug
+          build-dir: build
 
       - name: Configure Project
         uses: threeal/cmake-action@v1.3.0
