@@ -4,7 +4,6 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_EXTRACT_ALL YES)
     set(DOXYGEN_EXTRACT_LOCAL_CLASSES YES)
     set(DOXYGEN_FILE_PATTERNS *.hpp *.cpp)
-    set(DOXYGEN_GENERATE_TREEVIEW NO)
     set(DOXYGEN_HIDE_FRIEND_COMPOUNDS YES)
     set(DOXYGEN_HIDE_IN_BODY_DOCS NO)
     set(DOXYGEN_JAVADOC_AUTOBRIEF YES)
@@ -14,7 +13,6 @@ if (DOXYGEN_FOUND)
     set(DOXYGEN_SORT_BY_SCOPE_NAME YES)
     set(DOXYGEN_SORT_MEMBER_DOCS YES)
     set(DOXYGEN_SOURCE_BROWSER YES)
-    set(DOXYGEN_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/documentation")
 
     message(STATUS "Doxygen:                  ${DOXYGEN_EXECUTABLE}")
     message(STATUS "Doxygen version:          ${DOXYGEN_VERSION}")
@@ -22,8 +20,9 @@ if (DOXYGEN_FOUND)
 
     doxygen_add_docs(Doxygen
             "${CMAKE_SOURCE_DIR}/src"
-            "${CMAKE_SOURCE_DIR}/test"
+            "${CMAKE_SOURCE_DIR}/tests"
             "${CMAKE_SOURCE_DIR}/ftqlib"
+            "${CMAKE_SOURCE_DIR}/include"
             ALL
             COMMENT "Generate HTML documentation")
 else (DOXYGEN_FOUND)
