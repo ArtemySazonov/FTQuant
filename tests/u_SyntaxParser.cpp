@@ -1,13 +1,11 @@
 /** @file u_SyntaxParser.cpp
   * @brief Unit tests for SyntaxParser class implementation.
   */
-#include "../include/SyntaxParser.hpp"
+#include <SyntaxParser.hpp>
 
 #include <gtest/gtest.h>
 
-using namespace std;
-
-TEST(BedInputs, Subtest_1) {
+TEST(BadInputs, Subtest_1) {
   Command A1("SDS DSA 1 DSW 3");
   EXPECT_EQ(A1.code(), INVALID_COMMAND);
 
@@ -49,10 +47,3 @@ TEST(IsCorrectData, Subtest_2) {
   // Command D("GENERATE_TRAJECTORIES TRAJECTORIES_NUMBER 5 STEPS_NUMBER 12a");
   // EXPECT_EQ(D.code(), INVALID_COMMAND);
 }
-
-// int main(int argc, char **argv)
-// {
-//   ::testing::InitGoogleTest(&argc, argv);
-
-//   return RUN_ALL_TESTS();
-// }

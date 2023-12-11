@@ -1,8 +1,6 @@
 #ifndef FTQUANT_SYNTAXPARSER_HPP
 #define FTQUANT_SYNTAXPARSER_HPP
 
-#include <stdio.h>
-#include <string.h>
 #include <iostream>
 #include <map>
 #include <sstream>

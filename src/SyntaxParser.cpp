@@ -8,18 +8,7 @@
 #ifndef FTQUANT_SYNTAXPARSER_CPP
 #define FTQUANT_SYNTAXPARSER_CPP
 
-#include <stdio.h>
-#include <string.h>
-#include <iostream>
-#include <map>
-#include <sstream>
-#include <string>
-#include <string_view>
-#include <vector>
-
-#include <gtest/gtest.h>
-
-#include "../include/SyntaxParser.hpp"
+#include <SyntaxParser.hpp>
 
 bool isDouble(const std::string& str) {
   std::istringstream iss(str);
@@ -49,8 +38,6 @@ Command::Command(std::string com) {
   }
 
   for (const auto& w : words) {
-    // std::cout << w << '\n';
-
     if (Fields.count(w)) {
       if (!flag) {
         _key_numbers[w] = 0;
@@ -75,8 +62,6 @@ Command::Command(std::string com) {
   for (const auto& w : RequiredFields[_code]) {
     if (!_key_numbers.count(w)) {
       _code = INVALID_COMMAND;
-
-      // std::cout << "bed things: there is not " << w <<'\n';
     }
   }
 }
