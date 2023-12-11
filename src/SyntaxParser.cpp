@@ -23,127 +23,118 @@ bool isDouble(const std::string& str) {
   std::istringstream iss(str);
   double d;
   iss >> std::noskipws >>
-      d;  // Use noskipws to ensure entire string is consumed
+      d;  
   return iss.eof() &&
-         !iss.fail();  // Check if entire string was consumed and no error occurred
+         !iss.fail();  
 }
 
 Command::Command(std::string com) {
-    std::stringstream ss(com);
-    std::vector<std::string> words;
+  std::stringstream ss(com);
+  std::vector<std::string> words;
 
-    std::string temp;
+  std::string temp;
 
-    int flag = 0;
-    std::string word;
-    ss >> word;
-    if (Commands.count(word)) {
-      _code = Commands[word];
-    } else {
-      _code = Commands["INVALID_COMMAND"];
-    }
+  int flag = 0;
+  std::string word;
+  ss >> word;
+  if (Commands.count(word)) {
+    _code = Commands[word];
+  } else {
+    _code = Commands["INVALID_COMMAND"];
+  }
 
-    while (ss >> word) {
-      words.push_back(word);
-    }
+  while (ss >> word) {
+    words.push_back(word);
+  }
 
-    for (const auto& w : words) {
-      // std::cout << w << '\n';
+  for (const auto& w : words) {
+    // std::cout << w << '\n';
 
-      if (Fields.count(w)) {
-        if (!flag) {
-          _key_numbers[w] = 0;
-          flag = 1;
-          temp = w;
-        }
-        continue;
+    if (Fields.count(w)) {
+      if (!flag) {
+        _key_numbers[w] = 0;
+        flag = 1;
+        temp = w;
       }
-
-      if (flag == 1) {
-        if (isDouble(w))
-          _key_numbers[temp] = std::stod(w);
-        else {
-          std::cout << "cant convert " << w << " in double \n";
-        }
-        flag = 0;
-      }
+      continue;
     }
 
-    for (const auto& w : RequiredFields[_code]){
-        if(!_key_numbers.count(w)){
-            _code = INVALID_COMMAND;
-
-            // std::cout << "bed things: there is not " << w <<'\n';
-        }
+    if (flag == 1) {
+      if (isDouble(w))
+        _key_numbers[temp] = std::stod(w);
+      else {
+        std::cout << "cant convert " << w << " in double \n";
+      }
+      flag = 0;
     }
   }
 
-int Command::execute()
-{
-    double r = 0;
-    double sigma = 1;
-    int trajectories_generated = 0;
-    std::vector<std::vector<double>> traj;
-    std::cout << "BlackScholes model(r, sigma); \n";
-    switch (_code)
-    {
-    case INVALID_COMMAND:
-        return -1;
-        break;
+  for (const auto& w : RequiredFields[_code]) {
+    if (!_key_numbers.count(w)) {
+      _code = INVALID_COMMAND;
 
-    case BLACK_SCHOLES:
-        std::cout << "BlackScholes model(_key_numbers[\"INTEREST_RATE\"], _key_numbers[\"SIGMA\"]); \n";
-        break;
-    
-    case GENERATE_TRAJECTORIES:
-        std::cout << "traj = model.generateTrajectories(_key_numbers[\"TRAJECTORIES_NUMBER\"], _key_numbers[\"STEPS_NUMBER\"]); \n";
-        trajectories_generated = 1;
-        break;
-
-    case EURO_PUT:
-        std::cout << "EuroPut(_key_numbers[\"STOCK_PRICE\"], _key_numbers[\"STRIKE\"]) \n";
-        if(!trajectories_generated) {
-            std::cout << "model.generateTrajectories(100, 1000)\n";
-        }
-        std::cout << "EuroPut.price(traj) \n";
-        break;
-
-    case EURO_CALL:
-        std::cout << "EuroPut(_key_numbers[\"STOCK_PRICE\"], _key_numbers[\"STRIKE\"]) \n";
-        if(!trajectories_generated) {
-            std::cout << "model.generateTrajectories(100, 1000)\n";
-        }
-        std::cout << "EuroPut.price(traj) \n";
-        break;
-    
-    default:
-        return -1;
-        break;
+      // std::cout << "bed things: there is not " << w <<'\n';
     }
-    return 0;
+  }
 }
 
-std::ostream &operator<<(std::ostream& os, const Command& C) {
-    std::cout << "code: " << C._code << std::endl;
-    std::cout << "keyNumbers: ";
-    for (const auto& [key, value] : C._key_numbers)
-      std::cout << '[' << key << "] = " << value << "; ";
+int Command::execute() {
+  double r = 0;
+  double sigma = 1;
+  int trajectories_generated = 0;
+  std::vector<std::vector<double>> traj;
+  std::cout << "BlackScholes model(r, sigma); \n";
+  switch (_code) {
+    case INVALID_COMMAND:
+      return -1;
+      break;
 
-    std::cout << std::endl;
+    case BLACK_SCHOLES:
+      std::cout << "BlackScholes model(_key_numbers[\"INTEREST_RATE\"], "
+                   "_key_numbers[\"SIGMA\"]); \n";
+      break;
 
-    return os;
+    case GENERATE_TRAJECTORIES:
+      std::cout << "traj = "
+                   "model.generateTrajectories(_key_numbers[\"TRAJECTORIES_"
+                   "NUMBER\"], _key_numbers[\"STEPS_NUMBER\"]); \n";
+      trajectories_generated = 1;
+      break;
+
+    case EURO_PUT:
+      std::cout << "EuroPut(_key_numbers[\"STOCK_PRICE\"], "
+                   "_key_numbers[\"STRIKE\"]) \n";
+      if (!trajectories_generated) {
+        std::cout << "model.generateTrajectories(100, 1000)\n";
+      }
+      std::cout << "EuroPut.price(traj) \n";
+      break;
+
+    case EURO_CALL:
+      std::cout << "EuroPut(_key_numbers[\"STOCK_PRICE\"], "
+                   "_key_numbers[\"STRIKE\"]) \n";
+      if (!trajectories_generated) {
+        std::cout << "model.generateTrajectories(100, 1000)\n";
+      }
+      std::cout << "EuroPut.price(traj) \n";
+      break;
+
+    default:
+      return -1;
+      break;
   }
+  return 0;
+}
 
+std::ostream& operator<<(std::ostream& os, const Command& C) {
+  std::cout << "code: " << C._code << std::endl;
+  std::cout << "keyNumbers: ";
+  for (const auto& [key, value] : C._key_numbers)
+    std::cout << '[' << key << "] = " << value << "; ";
 
-int main(void)
-{
-    Command C("GENERATE_TRAJECTORIES SIGMA 5 INTEREST_RATE 6");
-    std::cout << C;
-    C.execute();
+  std::cout << std::endl;
 
-    std::cout << std::endl;
-
-    return 0;
+  return os;
 }
 
 #endif  //FTQUANT_SYNTAXPARSER_HPP
