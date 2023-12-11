@@ -36,7 +36,7 @@ std::vector<std::vector<std::string>> RequiredFields{
 bool isDouble(const std::string& str);
 
 class Command {
- public:
+ private:
   int _code;
   std::map<std::string, double> _key_numbers;
 
