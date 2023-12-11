@@ -6,7 +6,6 @@
  * the main classes and functions for the library.
  *
  * @see include/BlackSholes.hpp
- * @see include/HestonStochVol.hpp
  * @see include/LocalVolatility.hpp
  * @see include/MonteCarlo.hpp
  *

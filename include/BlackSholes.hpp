@@ -13,16 +13,26 @@
  *
  * @see https://en.wikipedia.org/wiki/Black%E2%80%93Scholes_model
  * @see https://www.investopedia.com/terms/b/blackscholes.asp
- * @see https://www.investopedia.com/terms/g/geometricbrownian.asp
  * @see https://www.investopedia.com/terms/e/europeanoption.asp
  */
 
 #ifndef FTQUANT_BLACKSHOLES_HPP
 #define FTQUANT_BLACKSHOLES_HPP
+#include <vector>
 
-/** @class BlackSholes
+/**
+ * @class BlackSholes
  * @brief Implements the Black-Sholes model
  */
-class BlackSholes {};
+class BlackSholes {
+ private:
+  double r;
+  double sigma;
+
+ public:
+  BlackSholes(double r, double sigma) : r(r), sigma(sigma) {}
+
+  std::vector<std::vector<double>> generate_paths(int n_paths);
+};
 
 #endif  //FTQUANT_BLACKSHOLES_HPP

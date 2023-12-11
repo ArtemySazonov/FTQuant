@@ -12,11 +12,11 @@
  */
 std::string MonteCarloResult::to_json() const {
   std::string json = "{";
-  json += "\"result_code\": " + std::to_string(result_code) + ", ";
-  json += "\"n_simulations\": " + std::to_string(n_simulations) + ", ";
-  json += "\"error\": " + std::to_string(error) + ", ";
-  json += "\"result\": " + std::to_string(result);
-  json += "}";
+  json += "\"result_code\": " + std::to_string(result_code) + ", " +
+          "\"n_simulations\": " + std::to_string(n_simulations) + ", " +
+          "\"error\": " + std::to_string(error) + ", " +
+          "\"result\": " + std::to_string(result) + "}";
+
   return json;
 }
 
@@ -50,7 +50,7 @@ MonteCarloResult MonteCarloPricer<T>::estimate_price(
     double sum = 0;
     double sum2 = 0;
     for (int i = 0; i < num_simulations_per_round; ++i) {
-      double price = model.simulate_price();
+      double price = model.generate_paths();
       double payoff_value = payoff(price);
       sum += payoff_value;
       sum2 += payoff_value * payoff_value;
@@ -78,7 +78,7 @@ MonteCarloResult MonteCarloPricer<T>::estimate_price(
     n_simulations += num_simulations_per_round;
     result = mean_of_means;
     result_code = error < absolute_error ? SUCCESS : ERROR_NO_CONVERGENCE;
-  } while (result_code != SUCCESS && n_simulations < 1000000);
+  } while (result_code != SUCCESS && n_simulations < 10000000);
 
   return {result_code, n_simulations, error, result};
 }

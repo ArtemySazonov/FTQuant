@@ -20,10 +20,22 @@
 
 #ifndef FTQUANT_LOCALVOLATILITY_HPP
 #define FTQUANT_LOCALVOLATILITY_HPP
+#include <vector>
 
 /** @brief Implements the Dupire's local volatility model
  *
  */
-class LocalVolatility {};
+class LocalVolatility {
+ private:
+  double r;
+  std::function<double(double,double)> sigma;
+
+ public:
+  LocalVolatility(double r, std::function<double(double,double)> &sigma) : r(r), sigma(sigma) {}
+
+  int calibrate_dupire();
+  std::vector<std::vector<double>> generate_paths(int n_paths);
+};
+
 
 #endif  //FTQUANT_LOCALVOLATILITY_HPP

@@ -6,6 +6,5 @@ add_library(ftqlib
         # Model implementation files
         BlackSholes.cpp
         LocalVolatility.cpp
-        HestonStochastic.cpp
 )
 target_include_directories(ftqlib PUBLIC "../include/")
