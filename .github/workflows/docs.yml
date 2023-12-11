@@ -38,10 +38,9 @@ jobs:
 
       - name: Configure Project
         uses: threeal/cmake-action@v1.3.0
-        with:
-          generator: Ninja
-          c-compiler: clang
-          cxx-compiler: clang++
+
+      - name: Build Project
+        run: cmake . --build build
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
