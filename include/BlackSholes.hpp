@@ -32,7 +32,8 @@ class BlackSholes {
  public:
   BlackSholes(double r, double sigma) : r(r), sigma(sigma) {}
 
-  std::vector<std::vector<double>> generate_paths(int n_paths);
+  std::vector<std::vector<double>> generate_paths(int n_paths,
+                                                  bool antithetic = true);
 };
 
 #endif  //FTQUANT_BLACKSHOLES_HPP

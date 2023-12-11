@@ -19,7 +19,6 @@
 #include <vector>
 
 #include "BlackSholes.hpp"
-#include "HestonStochVol.hpp"
 #include "LocalVolatility.hpp"
 
 [[maybe_unused]] const int ERROR_MATHEMATICS =

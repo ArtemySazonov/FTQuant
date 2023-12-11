@@ -38,45 +38,36 @@ MonteCarloResult MonteCarloPricer<T>::estimate_price(
   const double t_critical = 1.96;  // TODO: use a table of t-critical values
 
   int n_simulations = 0;
+  int n_iterations = 0;
   int result_code = ERROR_NO_CONVERGENCE;
 
   double result = 0.;
   double error = 0.;
-
-  auto results = std::vector<double>();
-  auto sample_stds = std::vector<double>();
+  double result_var = 0.;
 
   do {
     double sum = 0;
     double sum2 = 0;
-    for (int i = 0; i < num_simulations_per_round; ++i) {
-      double price = model.generate_paths();
-      double payoff_value = payoff(price);
+
+    auto paths = model.generate_paths(num_simulations_per_round);
+    for (auto path : paths) {
+      double payoff_value = payoff(path);
       sum += payoff_value;
       sum2 += payoff_value * payoff_value;
     }
 
-    double mean = sum / num_simulations_per_round;
-    double mean2 = sum2 / num_simulations_per_round;
-    double std = sqrt(mean2 - mean * mean);
-    double sample_std = std / sqrt(num_simulations_per_round);
+    auto mean = sum / num_simulations_per_round;
+    auto mean2 = sum2 / num_simulations_per_round;
+    auto sample_var = (mean2 - mean * mean) / num_simulations_per_round;
 
-    results.push_back(mean);
-    sample_stds.push_back(sample_std);
-
-    double mean_of_means = 0;
-    double mean_of_sample_stds = 0;
-    for (size_t i = 0; i < results.size(); ++i) {
-      mean_of_means += results[i];
-      mean_of_sample_stds += sample_stds[i];
-    }
-    mean_of_means /= static_cast<double>(results.size());
-    mean_of_sample_stds /= static_cast<double>(sample_stds.size());
-
-    error = t_critical * abs(mean_of_sample_stds) / sqrt(results.size());
-
+    result_var =
+        ((n_iterations - 1) * result_var + sample_var) / (n_iterations);
+    result = (n_iterations * result + mean) / (n_iterations + 1);
+    ++n_iterations;
     n_simulations += num_simulations_per_round;
-    result = mean_of_means;
+
+    error = t_critical * abs(result_var) / sqrt(n_simulations);
+
     result_code = error < absolute_error ? SUCCESS : ERROR_NO_CONVERGENCE;
   } while (result_code != SUCCESS && n_simulations < 10000000);
 
