@@ -36,8 +36,8 @@ jobs:
         with:
           build-dir: 'build'
 
-      - name: Build Project
-        run: cmake .
+      - name: Build Documentation
+        run: cmake --build build --target Doxygen
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
