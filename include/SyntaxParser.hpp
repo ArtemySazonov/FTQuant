@@ -37,6 +37,10 @@ std::vector<std::vector<std::string>> RequiredFields{
 
 bool isDouble(const std::string& str);
 
+/**
+ * Class
+ */
+
 class Command {
  private:
   int _code;
