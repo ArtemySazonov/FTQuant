@@ -8,6 +8,7 @@
 #include <string_view>
 #include <vector>
 
+namespace {
 std::map<std::string, int> Fields{
     {"INTEREST_RATE", 0}, {"DERIVATIVE", 1},   {"TRAJECTORIES_NUMBER", 2},
     {"NAME", 3},          {"STEPS_NUMBER", 4}, {"PARAMS", 5},
@@ -32,6 +33,7 @@ std::vector<std::vector<std::string>> RequiredFields{
     {"TRAJECTORIES_NUMBER", "STEPS_NUMBER"},
     {"STOCK_PRICE", "STRIKE_PRICE"},
     {"STOCK_PRICE", "STRIKE_PRICE"}};
+}  // namespace
 
 bool isDouble(const std::string& str);
 
@@ -43,7 +45,7 @@ class Command {
  public:
   Command() : _code(Commands["INVALID_COMMAND"]) {}
 
-  Command(std::string com);
+  explicit Command(std::string com);
 
   int execute() const;
 
