@@ -10,7 +10,7 @@
 
 #include "SyntaxParser.hpp"
 
-bool isDouble(const std::string& str) {
+bool is_double(const std::string& str) {
   std::istringstream iss(str);
   double d;
   iss >> std::noskipws >> d;
@@ -58,7 +58,7 @@ Command::Command(std::string com) {
     }
 
     if (flag == 1) {
-      if (isDouble(w) || temp == "FILE")
+      if (is_double(w) || temp == "FILE")
         _key_numbers[temp] = w;
       else {
         // std::cout << "cant convert " << w << " in double \n";
@@ -86,7 +86,7 @@ std::vector<double> readStocksFromFile(std::string fname) {
   std::vector<double> ans;
   if (in.is_open()) {
     while (std::getline(in, line)) {
-      if (isDouble(line))
+      if (is_double(line))
         ans.push_back(std::stod(line));
       else {
         ans.push_back(-1);
@@ -116,7 +116,7 @@ std::vector<std::vector<double>> read2DFromFile(std::string fname) {
       int flag = 0;
 
       while (ss >> word) {
-        if (isDouble(word)) {
+        if (is_double(word)) {
           numbers.push_back(std::stod(word));
         } else {
           numbers.push_back(-1);

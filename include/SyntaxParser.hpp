@@ -11,7 +11,8 @@
 #include <string_view>
 
 namespace {
-/**
+/** @invariant Fields
+ * @brief Container for specific keywords
  * Saves the command keywords: names of all the available commands.
  */
 std::map<std::string, int> Fields{
@@ -23,14 +24,15 @@ std::map<std::string, int> Fields{
     // {"ANTITHETIC", 10}
 };
 
-/**
+/** @invariant Commands
  * Contains the command keywords: names of all the available commands.
  */
 std::map<std::string, int> Commands{
     {"INVALID_COMMAND", -1},      {"BLACK_SCHOLES", 0}, {"LOCVOL", 1},
     {"GENERATE_TRAJECTORIES", 2}, {"EURO_PUT", 3},      {"EURO_CALL", 4}};
 
-/**
+/** @enum Codes
+ * @brief Container for command codes
  * Contains the command codes for command identification in class Command and interaction with the vector RequiredFields.
  */
 enum Codes {
@@ -43,7 +45,8 @@ enum Codes {
   EURO_CALL = 5
 };
 
-/**
+/** @invariant RequiredFields
+ * @brief Container for required fields
  * Contains the fields required for each command to work correctly.
  * The number of string vector in vector of string vectors corresponds to the command code in the enum Codes.
  */
@@ -56,10 +59,14 @@ std::vector<std::vector<std::string>> RequiredFields{
     {"STOCK_PRICE", "STRIKE_PRICE"}};
 }  // namespace
 
-bool isDouble(const std::string& str);
+/** @function is_double
+ * @param str
+ */
+bool is_double(const std::string& str);
 
-/**
- * Class Command contains the parsed command. It is possible to create Command from string, execute command, print command and create json from it.
+/** @class Command
+ * @brief Container for the commands
+ * Class contains the parsed command. It is possible to create Command from string, execute command, print command and create json from it.
  */
 class Command {
   friend class Execution;
