@@ -28,17 +28,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Configure Project
-        uses: threeal/cmake-action@v1.3.0
-        with:
-          build-dir: cmake-build-debug
+      - name: Install Doxygen dependencies
+        run: sudo apt-get install -y --no-install-recommends doxygen graphviz
 
       - name: Configure Project
         uses: threeal/cmake-action@v1.3.0
         with:
-          generator: Ninja
-          c-compiler: clang
-          cxx-compiler: clang++
+          build-dir: 'build'
+
+      - name: Build Documentation
+        run: cmake --build build --target Doxygen
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -46,7 +45,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './cmake-build-debug/doxygen/html'
+          path: './build/doxygen/html'
 
       - name: Deploy to GitHub Pages
         id: deployment

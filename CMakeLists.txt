@@ -4,6 +4,8 @@ project(FTQuant LANGUAGES CXX VERSION 0.1)
 option(BUILD_DOC "Build documentation" ON)
 option(BUILD_TESTS "Build tests" ON)
 
+set(EXECUTABLE_OUTPUT_PATH  ${PROJECT_SOURCE_DIR}/build/)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -O3")
@@ -18,7 +20,6 @@ message(STATUS "CMAKE_CXX_STANDARD:       C++${CMAKE_CXX_STANDARD}")
 message(STATUS "CMAKE_CXX_FLAGS:         ${CMAKE_CXX_FLAGS}")
 message(STATUS "BUILD_DOC:                ${BUILD_DOC}")
 message(STATUS "BUILD_TESTS:              ${BUILD_TESTS}")
-message(STATUS "Boost_FOUND:              ${Boost_FOUND}")
 
 add_subdirectory(ftqlib)
 add_subdirectory(src)
