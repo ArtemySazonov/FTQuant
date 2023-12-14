@@ -1,33 +1,33 @@
 #ifndef FTQUANT_SYNTAXPARSER_HPP
 #define FTQUANT_SYNTAXPARSER_HPP
 
+#include <fstream>
+#include <functional>
 #include <iostream>
 #include <map>
 #include <sstream>
 #include <string>
 #include <string_view>
 #include <vector>
-#include <fstream>
-#include <functional>
 
 #include <BlackSholes.hpp>
 #include <LocalVolatility.hpp>
 
 namespace {
 std::map<std::string, int> Fields{
-  /**
+    /**
  * Saves the command keywords: names of all the available commands.  
  */
-  {"INTEREST_RATE", 0}, {"TRAJECTORIES_NUMBER", 2},
-  {"STEPS_NUMBER", 4},  {"SIGMA", 6},
-  {"FILE", 7}, {"EXP_T", 8},
-  {"SPOT_PRICE", 9}, {"FILE_W", 10},
-  {"FILE_T", 12}, {"FILE_y", 13},
-  // {"ANTITHETIC", 10}
-  };
+    {"INTEREST_RATE", 0}, {"TRAJECTORIES_NUMBER", 2},
+    {"STEPS_NUMBER", 4},  {"SIGMA", 6},
+    {"FILE", 7},          {"EXP_T", 8},
+    {"SPOT_PRICE", 9},    {"FILE_W", 10},
+    {"FILE_T", 12},       {"FILE_y", 13},
+    // {"ANTITHETIC", 10}
+};
 
 std::map<std::string, int> Commands{
-  /**
+    /**
  * Contains the command keywords: names of all the available commands.  
  */
     {"INVALID_COMMAND", -1},      {"BLACK_SCHOLES", 0}, {"LOCVOL", 1},
@@ -47,7 +47,7 @@ enum Codes {
 };
 
 std::vector<std::vector<std::string>> RequiredFields{
-  /**
+    /**
  * Contains the fields required for each command to work correctly. 
  * The number of string vector in vector of string vectors corresponds to the command code in the enum Codes.  
  */
@@ -67,6 +67,7 @@ bool isDouble(const std::string& str);
 
 class Command {
   friend class Execution;
+
  private:
   int _code;
   std::map<std::string, std::string> _key_numbers;
@@ -83,9 +84,8 @@ class Command {
   friend std::ostream& operator<<(std::ostream& os, const Command& C);
 };
 
-class Execution
-{
-private:
+class Execution {
+ private:
   int traj_generated;
   int isBS;
   std::vector<std::vector<double>> traj;
@@ -96,7 +96,7 @@ private:
   BlackSholes BSmodel;
   LocalVolatility LVmodel;
 
-public:
+ public:
   Execution() {}
 
   int execute(Command C);
