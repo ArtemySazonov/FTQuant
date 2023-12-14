@@ -14,6 +14,7 @@
 #ifndef FTQUANT_LIBRARY_HPP
 #define FTQUANT_LIBRARY_HPP
 
+#include <cmath>
 #include <functional>
 #include <string>
 #include <vector>
@@ -70,10 +71,51 @@ class MonteCarloPricer {
  public:
   MonteCarloPricer(T model) : model(model) {}
 
-  MonteCarloResult estimate_price(const std::function<double(std::vector<double>)>& payoff,
-                                  double absolute_error,
-                                  double confidence_level = 0.95,
-                                  int num_simulations_per_round = 1000);
+  MonteCarloResult estimate_price(
+      std::function<double(double)> payoff, double absolute_error, int steps,
+      double time, double spot,
+      bool antithetic = true, double confidence_level = 0.95,
+      int num_simulations_per_round = 1000) {
+
+    const double t_critical = 1.96;  // TODO: use a table of t-critical values
+
+    int n_simulations = 0;
+    int n_iterations = 0;
+    int result_code = ERROR_NO_CONVERGENCE;
+
+    double result = 0.;
+    double error = 0.;
+    double result_var = 0.;
+
+    do {
+      double sum = 0;
+      double sum2 = 0;
+
+      auto paths = model.generate_paths(num_simulations_per_round, steps, time,
+                                        spot, false);
+      for (auto path : paths) {
+        double payoff_value = payoff(path.back());
+        sum += payoff_value;
+        sum2 += payoff_value * payoff_value;
+      }
+
+      auto mean = sum / num_simulations_per_round;
+      auto mean2 = sum2 / num_simulations_per_round;
+      auto sample_var = (mean2 - mean * mean); // / num_simulations_per_round;
+
+      result_var =
+          ((n_iterations - 1) * result_var + sample_var) / (n_iterations);
+      result = (n_iterations * result + mean) / (n_iterations + 1);
+      ++n_iterations;
+      n_simulations += num_simulations_per_round;
+
+      error = t_critical * abs(result_var) / sqrt(n_simulations);
+
+      result_code = error < absolute_error ? SUCCESS : ERROR_NO_CONVERGENCE;
+    } while (result_code != SUCCESS && n_simulations < 10000000);
+
+    return {result_code, n_simulations, error, result};
+  }
 };
 
 /** @class PartialDiffEqPricer
