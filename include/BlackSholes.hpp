@@ -30,10 +30,14 @@ class BlackSholes {
   double sigma;
 
  public:
+  BlackSholes() : r(0.), sigma(1.) {}
+
   BlackSholes(double r, double sigma) : r(r), sigma(sigma) {}
 
-  std::vector<std::vector<double>> generate_paths(int n_paths,
+  std::vector<std::vector<double>> generate_paths(int n_paths, int steps,
+                                                  double T, double spot,
                                                   bool antithetic = true);
+  void calibrate(std::vector<double>& Stock_prices);
 };
 
 #endif  //FTQUANT_BLACKSHOLES_HPP
