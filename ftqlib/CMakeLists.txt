@@ -6,5 +6,7 @@ add_library(ftqlib
         # Model implementation files
         BlackSholes.cpp
         LocalVolatility.cpp
+
+        RectBivariateSpline.cpp
 )
 target_include_directories(ftqlib PUBLIC "../include/")

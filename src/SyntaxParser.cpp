@@ -138,7 +138,7 @@ int Execution::execute(Command C)
 
   std::vector<std::vector<double>> trajs;
 
-  BlackSholes BSmodel(r, sigma);
+  BlackScholes BSmodel(r, sigma);
   switch (C._code)
   {
   case INVALID_COMMAND:
@@ -151,7 +151,7 @@ int Execution::execute(Command C)
   case BLACK_SCHOLES:
   {
     // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE") << " \n";
-    BSmodel = BlackSholes(std::stod(C._key_numbers.at("INTEREST_RATE")), std::stod(C._key_numbers.at("SIGMA")));
+    BSmodel = BlackScholes(std::stod(C._key_numbers.at("INTEREST_RATE")), std::stod(C._key_numbers.at("SIGMA")));
     isBS = 1;
     // std::cout << "BlackScholes model(" << _key_numbers.at("INTEREST_RATE"] << " \n";
     //  "_key_numbers.at(\"SIGMA\"]); \n";

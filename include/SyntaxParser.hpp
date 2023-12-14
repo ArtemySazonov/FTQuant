@@ -93,7 +93,7 @@ class Execution {
   std::vector<double> T;
   std::vector<double> y;
 
-  BlackSholes BSmodel;
+  BlackScholes BSmodel;
   LocalVolatility LVmodel;
 
  public:
