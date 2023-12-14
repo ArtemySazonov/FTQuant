@@ -8,13 +8,23 @@
 #ifndef FTQUANT_SYNTAXPARSER_CPP
 #define FTQUANT_SYNTAXPARSER_CPP
 
-#include <SyntaxParser.hpp>
+#include "SyntaxParser.hpp"
 
 bool isDouble(const std::string& str) {
   std::istringstream iss(str);
   double d;
   iss >> std::noskipws >> d;
   return iss.eof() && !iss.fail();
+}
+
+std::string Command::to_json() const {
+  std::string json = "{";
+  json += "code: " + std::to_string(_code) + ", " + "keyNumbers: ";
+  for (const auto& [key, value] : _key_numbers)
+    json += '[' + key + "] = " + value + "; ";
+  json += '}';
+
+  return json;
 }
 
 Command::Command(std::string com) {

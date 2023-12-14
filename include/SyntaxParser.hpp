@@ -1,23 +1,20 @@
 #ifndef FTQUANT_SYNTAXPARSER_HPP
 #define FTQUANT_SYNTAXPARSER_HPP
 
+#include <ftqlib.hpp>
+
 #include <fstream>
-#include <functional>
 #include <iostream>
 #include <map>
-#include <sstream>
 #include <string>
+#include <sstream>
 #include <string_view>
-#include <vector>
-
-#include <BlackSholes.hpp>
-#include <LocalVolatility.hpp>
 
 namespace {
-std::map<std::string, int> Fields{
-    /**
- * Saves the command keywords: names of all the available commands.  
+/**
+ * Saves the command keywords: names of all the available commands.
  */
+std::map<std::string, int> Fields{
     {"INTEREST_RATE", 0}, {"TRAJECTORIES_NUMBER", 2},
     {"STEPS_NUMBER", 4},  {"SIGMA", 6},
     {"FILE", 7},          {"EXP_T", 8},
@@ -26,17 +23,17 @@ std::map<std::string, int> Fields{
     // {"ANTITHETIC", 10}
 };
 
-std::map<std::string, int> Commands{
-    /**
- * Contains the command keywords: names of all the available commands.  
+/**
+ * Contains the command keywords: names of all the available commands.
  */
+std::map<std::string, int> Commands{
     {"INVALID_COMMAND", -1},      {"BLACK_SCHOLES", 0}, {"LOCVOL", 1},
     {"GENERATE_TRAJECTORIES", 2}, {"EURO_PUT", 3},      {"EURO_CALL", 4}};
 
-enum Codes {
-  /**
- * Contains the command codes for command identification in class Command and interaction with the vector RequiredFields. 
+/**
+ * Contains the command codes for command identification in class Command and interaction with the vector RequiredFields.
  */
+enum Codes {
   INVALID_COMMAND = -1,
   BLACK_SCHOLES = 0,
   BLACK_SCHOLES_F = 1,
@@ -46,11 +43,11 @@ enum Codes {
   EURO_CALL = 5
 };
 
-std::vector<std::vector<std::string>> RequiredFields{
-    /**
- * Contains the fields required for each command to work correctly. 
- * The number of string vector in vector of string vectors corresponds to the command code in the enum Codes.  
+/**
+ * Contains the fields required for each command to work correctly.
+ * The number of string vector in vector of string vectors corresponds to the command code in the enum Codes.
  */
+std::vector<std::vector<std::string>> RequiredFields{
     {"INTEREST_RATE", "SIGMA", "EXP_T", "SPOT_PRICE"},
     {"INTEREST_RATE", "FILE"},
     {"FILE_w", "FILE_T", "FILE_y", "SPOT_PRICE"},
@@ -64,7 +61,6 @@ bool isDouble(const std::string& str);
 /**
  * Class Command contains the parsed command. It is possible to create Command from string, execute command, print command and create json from it.
  */
-
 class Command {
   friend class Execution;
 
@@ -75,7 +71,7 @@ class Command {
  public:
   Command() : _code(Commands["INVALID_COMMAND"]) {}
 
-  explicit Command(std::string com);
+  Command(std::string com);
 
   int code() const;
 

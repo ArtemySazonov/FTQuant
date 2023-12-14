@@ -1,9 +1,8 @@
 /** @file u_SyntaxParser.cpp
   * @brief Unit tests for SyntaxParser class implementation.
   */
-#include <SyntaxParser.hpp>
-
 #include <gtest/gtest.h>
+#include <SyntaxParser.hpp>
 
 TEST(BadInputs, Subtest_1) {
   Command A1("SDS DSA 1 DSW 3");
@@ -22,21 +21,22 @@ TEST(BadInputs, Subtest_1) {
 
 TEST(IsCorrectData, Subtest_2) {
   Command A2("GENERATE_TRAJECTORIES TRAJECTORIES_NUMBER 5 STEPS_NUMBER 12");
-  EXPECT_EQ(A2.to_json(),
-            "{code: 2, keyNumbers: [STEPS_NUMBER] = 12; [TRAJECTORIES_NUMBER] "
-            "= 5; }");
+  EXPECT_EQ(
+      A2.to_json(),
+      R"({code: 2, keyNumbers: [STEPS_NUMBER] = 12; [TRAJECTORIES_NUMBER] "
+            "= 5; })");
 
   Command B2("BLACK_SCHOLES INTEREST_RATE 5.123 SIGMA 1.74");
   EXPECT_EQ(B2.to_json(),
-            "{code: 0, keyNumbers: [INTEREST_RATE] = 5.123000; [SIGMA] = "
-            "1.740000; }");
+            R"("{code: 0, keyNumbers: [INTEREST_RATE] = 5.123000; [SIGMA] = "
+            "1.740000; })");
 
   Command C2(
       "BLACK_SCHOLES INTEREST_RATE 5.123 SIGMA 1.74 INTEREST_RATE 2.123 SIGMA "
       "3.74");
   EXPECT_EQ(C2.to_json(),
-            "{code: 0, keyNumbers: [INTEREST_RATE] = 2.123000; [SIGMA] = "
-            "3.740000; }");
+            R"("{code: 0, keyNumbers: [INTEREST_RATE] = 2.123000; [SIGMA] = "
+            "3.740000; })");
 
   // Command B("TRAJECTORIES_NUMBER TRAJECTORIES_NUMBER 5 TRAJECTORIES_NUMBER 12");
   // EXPECT_EQ(B.code(), INVALID_COMMAND);

@@ -1,6 +1,4 @@
-set(SOURCES main.cpp SyntaxParser.cpp)
-
-add_executable(FTQS ${SOURCES})
-target_link_libraries(FTQS PRIVATE
+add_executable(FTQS main.cpp)
+target_link_libraries(FTQS PUBLIC
         ftqlib
 )

@@ -1,5 +1,6 @@
 add_library(ftqlib
         # Base class implementation files
+        SyntaxParser.cpp
         MonteCarlo.cpp
         PartialDiffEq.cpp
 
