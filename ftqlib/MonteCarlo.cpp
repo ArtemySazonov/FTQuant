@@ -31,9 +31,10 @@ std::string MonteCarloResult::to_json() const {
  * @see MonteCarloPricer
  */
 template <typename T>
-MonteCarloResult MonteCarloPricer<T>::estimate_price(
-    const std::function<double(double)>& payoff, double absolute_error,
-    double confidence_level, int num_simulations_per_round) {
+MonteCarloResult MonteCarloPricer<T>::estimate_price(const std::function<double(std::vector<double>)>& payoff,
+                                  double absolute_error,
+                                  double confidence_level = 0.95,
+                                  int num_simulations_per_round = 1000) {
 
   const double t_critical = 1.96;  // TODO: use a table of t-critical values
 

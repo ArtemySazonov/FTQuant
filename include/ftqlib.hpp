@@ -70,7 +70,7 @@ class MonteCarloPricer {
  public:
   MonteCarloPricer(T model) : model(model) {}
 
-  MonteCarloResult estimate_price(const std::function<double(double)>& payoff,
+  MonteCarloResult estimate_price(const std::function<double(std::vector<double>)>& payoff,
                                   double absolute_error,
                                   double confidence_level = 0.95,
                                   int num_simulations_per_round = 1000);
