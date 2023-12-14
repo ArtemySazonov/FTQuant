@@ -18,7 +18,7 @@ add_executable(unit_tests
         u_PartialDiffEq.cpp
 )
 
-target_link_libraries(unit_tests PRIVATE
+target_link_libraries(unit_tests PUBLIC
         GTest::GTest
         ftqlib
 )
