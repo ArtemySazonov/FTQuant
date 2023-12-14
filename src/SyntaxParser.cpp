@@ -150,7 +150,7 @@ int Execution::execute(Command C)
 
   case BLACK_SCHOLES:
   {
-    std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE") << " \n";
+    // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE") << " \n";
     BSmodel = BlackSholes(std::stod(C._key_numbers.at("INTEREST_RATE")), std::stod(C._key_numbers.at("SIGMA")));
     isBS = 1;
     // std::cout << "BlackScholes model(" << _key_numbers.at("INTEREST_RATE"] << " \n";
@@ -160,7 +160,7 @@ int Execution::execute(Command C)
 
   case BLACK_SCHOLES_F:
   {
-    std::cout << "BlackScholes model(" << C._key_numbers.at("FILE") << " \n";
+    // std::cout << "BlackScholes model(" << C._key_numbers.at("FILE") << " \n";
     auto stocks = readStocksFromFile(C._key_numbers.at("FILE"));
     for (auto &s : stocks)
     {
@@ -210,7 +210,8 @@ int Execution::execute(Command C)
   case GENERATE_TRAJECTORIES:
   {
     if (isBS)
-    {std::cout << "BS Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
+    {
+      // std::cout << "BS Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
       traj = BSmodel.generate_paths(
           std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")),
           std::stod(C._key_numbers.at("SPOT_PRICE")),
@@ -220,7 +221,7 @@ int Execution::execute(Command C)
     }
     else
     {
-      std::cout << "LV Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
+      // std::cout << "LV Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
       traj = LVmodel.generate_paths(
           std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")),
           std::stod(C._key_numbers.at("STEPS_NUMBER")),
