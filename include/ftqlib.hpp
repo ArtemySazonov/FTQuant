@@ -78,7 +78,7 @@ class MonteCarloPricer {
 
 /** @class PartialDiffEqPricer
  *  @brief A controller for derivatives pricing via a PDE solution.
- *
+ *  @deprecated This class is deprecated and will be removed in the future.
  */
 template <typename T>
 class PartialDiffEqPricer {

@@ -5,9 +5,6 @@
  * @see tests/u_SyntaxParser.cpp
  */
 
-#ifndef FTQUANT_SYNTAXPARSER_CPP
-#define FTQUANT_SYNTAXPARSER_CPP
-
 #include "SyntaxParser.hpp"
 
 bool is_double(const std::string& str) {
@@ -247,5 +244,3 @@ std::ostream& operator<<(std::ostream& os, const Command& C) {
 
   return os;
 }
-
-#endif  //FTQUANT_SYNTAXPARSER_HPP
