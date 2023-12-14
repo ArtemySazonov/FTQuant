@@ -11,7 +11,7 @@
 #include <string_view>
 
 namespace {
-/** @invariant Fields
+/** @var Fields
  * @brief Container for specific keywords
  * Saves the command keywords: names of all the available commands.
  */
@@ -24,14 +24,14 @@ std::map<std::string, int> Fields{
     // {"ANTITHETIC", 10}
 };
 
-/** @invariant Commands
+/** @var Commands
  * Contains the command keywords: names of all the available commands.
  */
 std::map<std::string, int> Commands{
     {"INVALID_COMMAND", -1},      {"BLACK_SCHOLES", 0}, {"LOCVOL", 1},
     {"GENERATE_TRAJECTORIES", 2}, {"EURO_PUT", 3},      {"EURO_CALL", 4}};
 
-/** @enum Codes
+/** @var Codes
  * @brief Container for command codes
  * Contains the command codes for command identification in class Command and interaction with the vector RequiredFields.
  */
@@ -45,7 +45,7 @@ enum Codes {
   EURO_CALL = 5
 };
 
-/** @invariant RequiredFields
+/** @var RequiredFields
  * @brief Container for required fields
  * Contains the fields required for each command to work correctly.
  * The number of string vector in vector of string vectors corresponds to the command code in the enum Codes.

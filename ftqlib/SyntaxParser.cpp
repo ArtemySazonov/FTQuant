@@ -134,8 +134,7 @@ std::vector<std::vector<double>> read2DFromFile(std::string fname) {
   return ans;
 }
 
-int Execution::execute(Command C)
-{
+int Execution::execute(Command C) {
   double r = 0.;
   double sigma = 1.;
 
@@ -149,103 +148,91 @@ int Execution::execute(Command C)
   std::vector<std::vector<double>> trajs;
 
   BlackScholes BSmodel(r, sigma);
-  switch (C._code)
-  {
-  case INVALID_COMMAND:
-  {
-    std::cout << "Invalid" << " \n";
-    return -1;
-    break;
-  }
-
-  case BLACK_SCHOLES:
-  {
-    // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE") << " \n";
-    BSmodel = BlackScholes(std::stod(C._key_numbers.at("INTEREST_RATE")), std::stod(C._key_numbers.at("SIGMA")));
-    isBS = 1;
-    // std::cout << "BlackScholes model(" << _key_numbers.at("INTEREST_RATE"] << " \n";
-    //  "_key_numbers.at(\"SIGMA\"]); \n";
-    break;
-  }
-
-  case BLACK_SCHOLES_F:
-  {
-    // std::cout << "BlackScholes model(" << C._key_numbers.at("FILE") << " \n";
-    auto stocks = readStocksFromFile(C._key_numbers.at("FILE"));
-    for (auto &s : stocks)
-    {
-      if (s < 0)
-        return -1;
-    }
-    BSmodel.calibrate(stocks);
-
-    isBS = 1;
-    // std::cout << "BlackScholes model(_key_numbers.at(\"INTEREST_RATE\"], "
-    //              "_key_numbers.at(\"SIGMA\"]); \n";
-    break;
-  }
-
-  case LOCVOL:
-  {
-    // std::cout << "LOCVOL model(" << C._key_numbers.at("FILE_T") << " \n";
-    T = readStocksFromFile(C._key_numbers.at("FILE_T"));
-    for (auto &s : T)
-    {
-      if (s < 0)
-        return -1;
+  switch (C._code) {
+    case INVALID_COMMAND: {
+      std::cout << "Invalid"
+                << " \n";
+      return -1;
+      break;
     }
 
-    y = readStocksFromFile(C._key_numbers.at("FILE_y"));
-    for (auto &s : y)
-    {
-      if (s < 0)
-        return -1;
+    case BLACK_SCHOLES: {
+      // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE") << " \n";
+      BSmodel = BlackScholes(std::stod(C._key_numbers.at("INTEREST_RATE")),
+                             std::stod(C._key_numbers.at("SIGMA")));
+      isBS = 1;
+      // std::cout << "BlackScholes model(" << _key_numbers.at("INTEREST_RATE"] << " \n";
+      //  "_key_numbers.at(\"SIGMA\"]); \n";
+      break;
     }
 
-    w = read2DFromFile(C._key_numbers.at("FILE_w"));
-    for (auto &s1 : w)
-    {
-      for (auto &s2 : s1)
-      {
-        if (s2 < 0)
+    case BLACK_SCHOLES_F: {
+      // std::cout << "BlackScholes model(" << C._key_numbers.at("FILE") << " \n";
+      auto stocks = readStocksFromFile(C._key_numbers.at("FILE"));
+      for (auto& s : stocks) {
+        if (s < 0)
           return -1;
       }
+      BSmodel.calibrate(stocks);
+
+      isBS = 1;
+      // std::cout << "BlackScholes model(_key_numbers.at(\"INTEREST_RATE\"], "
+      //              "_key_numbers.at(\"SIGMA\"]); \n";
+      break;
     }
 
-    LVmodel.calibrate_dupire(w, T, y, std::stod(C._key_numbers.at("SPOT_PRICE")));
-    isBS = 0;
-    break;
-  }
+    case LOCVOL: {
+      // std::cout << "LOCVOL model(" << C._key_numbers.at("FILE_T") << " \n";
+      T = readStocksFromFile(C._key_numbers.at("FILE_T"));
+      for (auto& s : T) {
+        if (s < 0)
+          return -1;
+      }
 
-  case GENERATE_TRAJECTORIES:
-  {
-    if (isBS)
-    {
-      // std::cout << "BS Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
-      traj = BSmodel.generate_paths(
-          std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")),
-          std::stod(C._key_numbers.at("SPOT_PRICE")),
-          std::stod(C._key_numbers.at("STEPS_NUMBER")),
-          std::stod(C._key_numbers.at("EXP_T")));
-      traj_generated = 1;
+      y = readStocksFromFile(C._key_numbers.at("FILE_y"));
+      for (auto& s : y) {
+        if (s < 0)
+          return -1;
+      }
+
+      w = read2DFromFile(C._key_numbers.at("FILE_w"));
+      for (auto& s1 : w) {
+        for (auto& s2 : s1) {
+          if (s2 < 0)
+            return -1;
+        }
+      }
+
+      LVmodel.calibrate_dupire(w, T, y,
+                               std::stod(C._key_numbers.at("SPOT_PRICE")));
+      isBS = 0;
+      break;
     }
-    else
-    {
-      // std::cout << "LV Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
-      traj = LVmodel.generate_paths(
-          std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")),
-          std::stod(C._key_numbers.at("STEPS_NUMBER")),
-          std::stod(C._key_numbers.at("EXP_T")),
-          std::stod(C._key_numbers.at("SPOT_PRICE")));
-      traj_generated = 1;
+
+    case GENERATE_TRAJECTORIES: {
+      if (isBS) {
+        // std::cout << "BS Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
+        traj = BSmodel.generate_paths(
+            std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")),
+            std::stod(C._key_numbers.at("SPOT_PRICE")),
+            std::stod(C._key_numbers.at("STEPS_NUMBER")),
+            std::stod(C._key_numbers.at("EXP_T")));
+        traj_generated = 1;
+      } else {
+        // std::cout << "LV Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
+        traj = LVmodel.generate_paths(
+            std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")),
+            std::stod(C._key_numbers.at("STEPS_NUMBER")),
+            std::stod(C._key_numbers.at("EXP_T")),
+            std::stod(C._key_numbers.at("SPOT_PRICE")));
+        traj_generated = 1;
+      }
+      break;
     }
-    break;
-  }
-  default:
-  {
-    return -1;
-    break;
-  }
+    default: {
+      return -1;
+      break;
+    }
   }
   return 0;
 }

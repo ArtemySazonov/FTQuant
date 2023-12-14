@@ -1,6 +1,6 @@
-#include "LocalVolatility.hpp"
+#include <LocalVolatility.hpp>
+#include <RectBivariateSpline.hpp>
 #include <random>
-#include "RectBivariateSpline.hpp"
 
 LocalVolatility::LocalVolatility() : r(0.) {
   sigma = [](double a, double b) {
@@ -12,7 +12,6 @@ std::vector<std::vector<double>> LocalVolatility::generate_paths(int n_paths,
                                                                  double spot,
                                                                  int steps,
                                                                  double T) {
-
   std::random_device rd{};
   std::mt19937 gen(rd());
 
@@ -28,9 +27,10 @@ std::vector<std::vector<double>> LocalVolatility::generate_paths(int n_paths,
     double ti = 0.;
 
     for (int j = 1; j <= steps; ++j) {
-      double sigma = this->sigma(ti, exp(path[j]));
-      path.push_back(path[j - 1] + (this->r - 0.5 * sigma * sigma) * dt +
-                     sigma * sqdt * Normal(gen));
+      double sigma_val = this->sigma(ti, exp(path[j]));
+      path.push_back(path[j - 1] +
+                     (this->r - 0.5 * sigma_val * sigma_val) * dt +
+                     sigma_val * sqdt * Normal(gen));
       ti += dt;
       path[j - 1] = spot * exp(path[j - 1]);
     }
@@ -43,7 +43,6 @@ std::vector<std::vector<double>> LocalVolatility::generate_paths(int n_paths,
 int LocalVolatility::calibrate_dupire(std::vector<std::vector<double>>& omega,
                                       std::vector<double>& T,
                                       std::vector<double>& y, double spot) {
-  auto r = this->r;
   RectBivariateCubicSpline w;
   w.fit(T, y, omega);
 

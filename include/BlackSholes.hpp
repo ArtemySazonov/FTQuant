@@ -20,6 +20,10 @@
 #define FTQUANT_BLACKSCHOLES_HPP
 #include <vector>
 
+void thomas_algorithm(std::vector<double>& v, std::vector<double>& a,
+                      std::vector<double>& b, std::vector<double>& c,
+                      std::vector<double>& f);
+
 /**
  * @class BlackScholes
  * @brief Implements the Black-Scholes model
@@ -37,8 +41,10 @@ class BlackScholes {
   std::vector<std::vector<double>> generate_paths(int n_paths, int steps,
                                                   double T, double spot,
                                                   bool antithetic = true);
-  void calibrate(std::vector<double>& Stock_prices);
-  std::vector<std::vector<double>> Black_Scholes_PDE_Solver(double r, double sigma, double T, double(*payoff)(double), double S_max, double S_min, int M, int N);
+  void calibrate(std::vector<double>& stock_prices);
+  std::vector<std::vector<double>> pde_pricer(
+      double r, double sigma, double T, std::function<double(double)> payoff,
+      double S_max, double S_min, int M, int N);
 };
 
 #endif  //FTQUANT_BLACKSCHOLES_HPP
