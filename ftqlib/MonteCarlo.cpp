@@ -4,6 +4,7 @@
  * @brief Implementations of the MonteCarloResult and MonteCarloPricer classes.
  */
 #include <ftqlib.hpp>
+#include <cmath>
 
 /** A function that converts a MonteCarloResult to a JSON string.
  *  @brief MonteCarloResult to a JSON string.

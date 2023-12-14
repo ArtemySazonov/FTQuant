@@ -1,5 +1,10 @@
-#include "BlackSholes.hpp"
 #include <random>
+#include <algorithm>
+
+#include "BlackSholes.hpp"
+#include "ThomasAlgorithm.cpp"
+
+
 
 std::vector<std::vector<double>> BlackScholes::generate_paths(
     int n_paths, int steps, double T, double spot, bool antithetic) {
@@ -68,7 +73,7 @@ void BlackScholes::calibrate(std::vector<double>& Stock_prices) {
 }
 
 
-std::vector<std::vector<double>> BlackScholes::Black_Scholes_PDE_Solver(double r, double sigma, double T, double(*payoff)(double), double S_max = 10000, double S_min = 0, int M = 1000, int N = 50)
+std::vector<std::vector<double>> BlackScholes::Black_Scholes_PDE_Solver(double r, double sigma, double T, double(*payoff)(double), double S_max, double S_min, int M, int N)
 
 {
 	double h = (S_max - S_min) / N; //s step
