@@ -16,23 +16,23 @@
  * @see https://www.investopedia.com/terms/e/europeanoption.asp
  */
 
-#ifndef FTQUANT_BLACKSHOLES_HPP
-#define FTQUANT_BLACKSHOLES_HPP
+#ifndef FTQUANT_BLACKSCHOLES_HPP
+#define FTQUANT_BLACKSCHOLES_HPP
 #include <vector>
 
 /**
  * @class BlackScholes
  * @brief Implements the Black-Scholes model
  */
-class BlackSholes {
+class BlackScholes {
  private:
   double r;
   double sigma;
 
  public:
-  BlackSholes() : r(0.), sigma(1.) {}
+  BlackScholes() : r(0.), sigma(1.) {}
 
-  BlackSholes(double r, double sigma) : r(r), sigma(sigma) {}
+  BlackScholes(double r, double sigma) : r(r), sigma(sigma) {}
 
   std::vector<std::vector<double>> generate_paths(int n_paths, int steps,
                                                   double T, double spot,
@@ -40,4 +40,4 @@ class BlackSholes {
   void calibrate(std::vector<double>& Stock_prices);
 };
 
-#endif  //FTQUANT_BLACKSHOLES_HPP
+#endif  //FTQUANT_BLACKSCHOLES_HPP
