@@ -10,15 +10,23 @@
 
 namespace {
 std::map<std::string, int> Fields{
-    {"INTEREST_RATE", 0}, {"DERIVATIVE", 1},   {"TRAJECTORIES_NUMBER", 2},
-    {"NAME", 3},          {"STEPS_NUMBER", 4}, {"PARAMS", 5},
-    {"SIGMA", 6}};
+  /**
+ * Saves the command keywords: names of all the available commands.  
+ */
+  {"INTEREST_RATE", 0}, {"TRAJECTORIES_NUMBER", 2},
+  {"STEPS_NUMBER", 4},  {"SIGMA", 6}};
 
 std::map<std::string, int> Commands{
+  /**
+ * Saves the command keywords: names of all the available commands.  
+ */
     {"INVALID_COMMAND", -1},      {"BLACK_SCHOLES", 0}, {"LOCVOL", 1},
     {"GENERATE_TRAJECTORIES", 2}, {"EURO_PUT", 3},      {"EURO_CALL", 4}};
 
-enum {
+enum Codes {
+  /**
+ * Saves the command codes for command identification in class Command and interaction with the vector RequiredFields. 
+ */
   INVALID_COMMAND = -1,
   BLACK_SCHOLES = 0,
   LOCVOL = 1,
@@ -28,6 +36,10 @@ enum {
 };
 
 std::vector<std::vector<std::string>> RequiredFields{
+  /**
+ * Saves the fields required for each command to work correctly. 
+ * The number of string vector in vector of string vectors corresponds to the command code in the enum Codes.  
+ */
     {"INTEREST_RATE", "SIGMA"},
     {},
     {"TRAJECTORIES_NUMBER", "STEPS_NUMBER"},
@@ -38,7 +50,7 @@ std::vector<std::vector<std::string>> RequiredFields{
 bool isDouble(const std::string& str);
 
 /**
- * Class
+ * Class Command saves the parsed command. It is possible to create Command from string, execute command, print command and create json from it.
  */
 
 class Command {
