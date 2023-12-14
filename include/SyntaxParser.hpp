@@ -7,8 +7,10 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <fstream>
+#include <functional>
 
-#include <BlackScholes.hpp>
+#include <BlackSholes.hpp>
 #include <LocalVolatility.hpp>
 
 namespace {
@@ -64,6 +66,7 @@ bool isDouble(const std::string& str);
  */
 
 class Command {
+  friend class Execution;
  private:
   int _code;
   std::map<std::string, std::string> _key_numbers;
@@ -73,13 +76,30 @@ class Command {
 
   explicit Command(std::string com);
 
-  int execute() const;
-
   int code() const;
 
   std::string to_json() const;
 
   friend std::ostream& operator<<(std::ostream& os, const Command& C);
+};
+
+class Execution
+{
+private:
+  int traj_generated;
+  int isBS;
+  std::vector<std::vector<double>> traj;
+  std::vector<std::vector<double>> w;
+  std::vector<double> T;
+  std::vector<double> y;
+
+  BlackSholes BSmodel;
+  LocalVolatility LVmodel;
+
+public:
+  Execution() {}
+
+  int execute(Command C);
 };
 
 #endif  //FTQUANT_SYNTAXPARSER_HPP

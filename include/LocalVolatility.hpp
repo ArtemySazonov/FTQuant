@@ -31,6 +31,7 @@ class LocalVolatility {
   std::function<double(double,double)> sigma;
 
  public:
+  LocalVolatility();
   LocalVolatility(double r, std::function<double(double,double)> &sigma) : r(r), sigma(sigma) {}
 
   int calibrate_dupire();

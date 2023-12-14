@@ -30,6 +30,7 @@ class BlackSholes {
   double sigma;
 
  public:
+  BlackSholes() : r(0.), sigma(1.) {}
   BlackSholes(double r, double sigma) : r(r), sigma(sigma) {}
 
   std::vector<std::vector<double>> generate_paths(int n_paths,
