@@ -38,6 +38,7 @@ class BlackScholes {
                                                   double T, double spot,
                                                   bool antithetic = true);
   void calibrate(std::vector<double>& Stock_prices);
+  std::vector<std::vector<double>> Black_Scholes_PDE_Solver(double r, double sigma, double T, double(*payoff)(double), double S_max = 10000, double S_min = 0, int M = 1000, int N = 50);
 };
 
 #endif  //FTQUANT_BLACKSCHOLES_HPP
