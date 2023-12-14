@@ -40,7 +40,7 @@ Command::Command(std::string com) {
   for (const auto& w : words) {
     if (Fields.count(w)) {
       if (!flag) {
-        _key_numbers[w] = 0;
+        _key_numbers[w] = "0";
         flag = 1;
         temp = w;
       }
@@ -48,10 +48,10 @@ Command::Command(std::string com) {
     }
 
     if (flag == 1) {
-      if (isDouble(w))
-        _key_numbers[temp] = std::stod(w);
+      if (isDouble(w) || temp == "FILE")
+        _key_numbers[temp] = w;
       else {
-        std::cout << "cant convert " << w << " in double \n";
+        // std::cout << "cant convert " << w << " in double \n";
         _code = INVALID_COMMAND;
         return;
       }
@@ -70,27 +70,151 @@ int Command::code() const {
   return _code;
 }
 
+std::vector<double> readStocksFromFile(std::string fname)
+{
+  std::string line;
+  std::ifstream in(fname); 
+  std::vector<double> ans;
+    if (in.is_open())
+    {
+        while (std::getline(in, line))
+        {
+          if(isDouble(line))
+            ans.push_back(std::stod(line));
+          else {
+            ans.push_back(-1);
+            in.close();
+            return ans;
+          }
+        }
+    }
+    else {
+      ans.push_back(-1);
+      in.close();
+      return ans;
+      }
+    in.close();
+    return ans;
+}
+
+std::vector<std::vector<double>> read2DFromFile(std::string fname)
+{
+    std::string line;
+    std::ifstream in(fname);
+    std::vector<std::vector<double>> ans;
+    if (in.is_open())
+    {
+        while (std::getline(in, line))
+        {
+            std::stringstream ss(line);
+            std::vector<double> numbers;
+            std::string word;
+
+            int flag = 0;
+
+              while (ss >> word) {
+                if(isDouble(word)){
+                    numbers.push_back(std::stod(word));
+                }
+                else {
+                    numbers.push_back(-1);
+                }
+              }
+            ans.push_back(numbers);
+        }
+    }
+    else
+    {
+        std::vector<double> num{-1};
+        ans.push_back(num);
+        in.close();
+        return ans;
+    }
+    in.close();
+    return ans;
+}
+
 int Command::execute() const {
   double r = 0;
   double sigma = 1;
   int trajectories_generated = 0;
+  int isBS = 1;
+  // bool antith = true;
   std::vector<std::vector<double>> traj;
-  std::cout << "BlackScholes model(r, sigma); \n";
+  std::vector<std::vector<double>> stocks;
+
+  std::vector<std::vector<double>> w;
+  std::vector<double> T;
+  std::vector<double> y;
+
+  double simple(double x, double y){ return 0; }
+
+  BlackScholes BSmodel(r, sigma);
+  LocalVolatility LVmodel(r, simple);
   switch (_code) {
     case INVALID_COMMAND:
       return -1;
       break;
 
     case BLACK_SCHOLES:
-      std::cout << "BlackScholes model(_key_numbers[\"INTEREST_RATE\"], "
-                   "_key_numbers[\"SIGMA\"]); \n";
+      BSmodel = BlackScholes(std::stod(_key_numbers["INTEREST_RATE"]), std::stod(_key_numbers["SIGMA"]));
+      isBS = 1;
+      // std::cout << "BlackScholes model(_key_numbers[\"INTEREST_RATE\"], "
+      //              "_key_numbers[\"SIGMA\"]); \n";
+      break;
+
+    case BLACK_SCHOLES_F:
+      stocks = readStocksFromFile(_key_numbers["FILE"]);
+      for (auto & s : stocks){
+        if (s < 0) return -1;
+      }
+      BSmodel.calibrate(stocks);
+
+      isBS = 1;
+      // std::cout << "BlackScholes model(_key_numbers[\"INTEREST_RATE\"], "
+      //              "_key_numbers[\"SIGMA\"]); \n";
+      break;
+
+    case LOCVOL:
+
+      T = readStocksFromFile(_key_numbers["FILE_T"]);
+      for (auto & s : T){
+        if (s < 0) return -1;
+      }
+
+      y = readStocksFromFile(_key_numbers["FILE_y"]);
+      for (auto & s : y){
+        if (s < 0) return -1;
+      }
+
+      w = read2DFromFile(_key_numbers["FILE_w"]);
+      for (auto & s1 : w){
+        for (auto & s2 : w){
+          if (s2 < 0) return -1;
+      }
+      }
+
+      LVmodel.calibrate_dupire(w, T, y, std::stod(_key_numbers["SPOT_PRICE"]));
+      isBS = 0;
       break;
 
     case GENERATE_TRAJECTORIES:
-      std::cout << "traj = "
-                   "model.generateTrajectories(_key_numbers[\"TRAJECTORIES_"
-                   "NUMBER\"], _key_numbers[\"STEPS_NUMBER\"]); \n";
-      trajectories_generated = 1;
+    if(isBS) {
+      traj = BSmodel.generate_paths(
+            std::stod(_key_numbers["TRAJECTORIES_NUMBER"]), 
+            std::stod(_key_numbers["SPOT_PRICE"]), 
+            std::stod(_key_numbers["STEPS_NUMBER"]), 
+            std::stod(_key_numbers["EXP_T"]));
+        trajectories_generated = 1;
+      }
+      else {
+        traj = LVmodel.generate_paths(
+            std::stod(_key_numbers["TRAJECTORIES_NUMBER"]), 
+            std::stod(_key_numbers["STEPS_NUMBER"]), 
+            std::stod(_key_numbers["EXP_T"]), 
+            std::stod(_key_numbers["SPOT_PRICE"]), 
+        )
+      }
       break;
 
     case EURO_PUT:
@@ -122,7 +246,7 @@ std::string Command::to_json() const {
   std::string json = "{";
   json += "code: " + std::to_string(_code) + ", " + "keyNumbers: ";
   for (const auto& [key, value] : _key_numbers)
-    json += '[' + key + "] = " + std::to_string(value) + "; ";
+    json += '[' + key + "] = " + value + "; ";
 
   json += '}';
 
