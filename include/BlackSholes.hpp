@@ -21,8 +21,8 @@
 #include <vector>
 
 /**
- * @class BlackSholes
- * @brief Implements the Black-Sholes model
+ * @class BlackScholes
+ * @brief Implements the Black-Scholes model
  */
 class BlackSholes {
  private:
