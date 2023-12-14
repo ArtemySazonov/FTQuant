@@ -20,6 +20,7 @@
 
 #ifndef FTQUANT_LOCALVOLATILITY_HPP
 #define FTQUANT_LOCALVOLATILITY_HPP
+#include <functional>
 #include <vector>
 
 /** @brief Implements the Dupire's local volatility model
