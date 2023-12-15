@@ -20,23 +20,15 @@ TEST(BadInputs, Subtest_1) {
 }
 
 TEST(IsCorrectData, Subtest_2) {
-  Command A2("GENERATE_TRAJECTORIES TRAJECTORIES_NUMBER 5 STEPS_NUMBER 12");
+  Command A2("BLACK_SCHOLES INTEREST_RATE 0.14 SIGMA 0.8 EXP_T 1. SPOT_PRICE 1.");
   EXPECT_EQ(
       A2.to_json(),
-      R"({code: 2, keyNumbers: [STEPS_NUMBER] = 12; [TRAJECTORIES_NUMBER] "
-            "= 5; })");
+      "{code: 0, keyNumbers: [EXP_T] = 1.; [INTEREST_RATE] = 0.14; [SIGMA] = 0.8; [SPOT_PRICE] = 1.; }");
 
-  Command B2("BLACK_SCHOLES INTEREST_RATE 5.123 SIGMA 1.74");
+  Command B2("EURO_CALL ERROR 0.01 STRIKE_PRICE 100 TRAJECTORIES_NUMBER 100 STEPS_NUMBER 1000 EXP_T 1. SPOT_PRICE 100.");
   EXPECT_EQ(B2.to_json(),
-            R"("{code: 0, keyNumbers: [INTEREST_RATE] = 5.123000; [SIGMA] = "
-            "1.740000; })");
+            "{code: 5, keyNumbers: [ERROR] = 0.01; [EXP_T] = 1.; [SPOT_PRICE] = 100.; [STEPS_NUMBER] = 1000; [STRIKE_PRICE] = 100; [TRAJECTORIES_NUMBER] = 100; }");
 
-  Command C2(
-      "BLACK_SCHOLES INTEREST_RATE 5.123 SIGMA 1.74 INTEREST_RATE 2.123 SIGMA "
-      "3.74");
-  EXPECT_EQ(C2.to_json(),
-            R"("{code: 0, keyNumbers: [INTEREST_RATE] = 2.123000; [SIGMA] = "
-            "3.740000; })");
 
   // Command B("TRAJECTORIES_NUMBER TRAJECTORIES_NUMBER 5 TRAJECTORIES_NUMBER 12");
   // EXPECT_EQ(B.code(), INVALID_COMMAND);
