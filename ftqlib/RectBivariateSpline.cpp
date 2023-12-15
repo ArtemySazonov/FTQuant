@@ -8,17 +8,17 @@ RectBivariateCubicSpline::get_coefs() const {
   return coefs;
 }
 
-int transpose(std::vector<std::vector<double>>& mat) {
-  std::vector<std::vector<double>> new_mat;
-  for (unsigned j = 0; j < mat[0].size(); ++j) {
-    std::vector<double> new_line;
-    for (unsigned i = 0; i < mat.size(); ++i) {
-      new_line.push_back(mat[i][j]);
+static void transpose(std::vector<std::vector<double>>& mat) {
+  using iter_t = decltype(mat[0].size());
+  const iter_t n = mat.size();
+  const iter_t m = mat[0].size();
+  std::vector<std::vector<double>> transposed(m, std::vector<int>(n));
+  for (iter_t j = 0; j < m; ++j) {
+    for (iter_t i = 0; i < n; ++i) {
+      transposed[j][i] = mat[i][j];
     }
-    new_mat.push_back(new_line);
   }
-  mat = new_mat;
-  return 0;
+  mat = transposed;
 }
 
 std::vector<std::vector<double>> diff(const std::vector<double>& x,
