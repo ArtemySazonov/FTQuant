@@ -83,8 +83,8 @@ int Execution::execute(Command C) {
     }
 
     case BLACK_SCHOLES: {
-      std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE")
-                << " \n";
+      // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE")
+      //           << " \n";
       BSmodel = BlackScholes(std::stod(C._key_numbers.at("INTEREST_RATE")),
                              std::stod(C._key_numbers.at("SIGMA")));
       isBS = 1;
@@ -94,7 +94,7 @@ int Execution::execute(Command C) {
     }
 
     case BLACK_SCHOLES_F: {
-      std::cout << "BlackScholes model(" << C._key_numbers.at("FILE") << " \n";
+      // std::cout << "BlackScholes model(" << C._key_numbers.at("FILE") << " \n";
       auto stocks = readStocksFromFile(C._key_numbers.at("FILE"));
       for (auto& s : stocks) {
         if (s < 0)
@@ -159,7 +159,7 @@ int Execution::execute(Command C) {
     }
     case EURO_CALL: {
       auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
-      double res = 0;
+      // double res = 0;
 
       double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
 
@@ -186,10 +186,9 @@ int Execution::execute(Command C) {
           payoff, std::stod(C._key_numbers.at("ERROR")),
           std::stod(C._key_numbers.at("STEPS_NUMBER")),
           std::stod(C._key_numbers.at("EXP_T")),
-          std::stod(C._key_numbers.at("SPOT_PRICE")),
-          true, 0.95, 1000);
+          std::stod(C._key_numbers.at("SPOT_PRICE")), true, 0.95, 1000);
 
-      std::cout << "ans: "<< res << std::endl;
+      std::cout << "ans: " << res.to_json() << std::endl;
 
       break;
     }
