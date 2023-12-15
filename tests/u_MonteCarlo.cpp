@@ -5,7 +5,7 @@
  * @see tests/u_PartialDiffEq.cpp
  */
 #include <gtest/gtest.h>
-#include "ftqlib.hpp"
+#include <ftqlib.hpp>
 
 /** Unit test for MonteCarloResult::to_json(). Checks that the output is valid JSON.
  *  @brief Unit test for MonteCarloResult::to_json()
