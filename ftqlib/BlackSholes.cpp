@@ -33,7 +33,7 @@ std::vector<std::vector<double>> BlackScholes::generate_paths(
       path1[path1.size() - 1] = spot * exp(path1[path1.size() - 1]);
       path2[path2.size() - 1] = spot * exp(path2[path2.size() - 1]);
 
-      std::cout << "path: " << path1.size() << std::endl;
+      // std::cout << "path: " << path1.size() << std::endl;
 
       paths.push_back(path1);
       paths.push_back(path2);

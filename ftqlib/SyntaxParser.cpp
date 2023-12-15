@@ -163,36 +163,33 @@ int Execution::execute(Command C) {
 
       double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
 
-              traj = BSmodel.generate_paths(
-            std::stoi(C._key_numbers.at("TRAJECTORIES_NUMBER")),
-            std::stod(C._key_numbers.at("SPOT_PRICE")),
-            std::stoi(C._key_numbers.at("STEPS_NUMBER")),
-            std::stod(C._key_numbers.at("EXP_T")));
+      //         traj = BSmodel.generate_paths(
+      //       std::stoi(C._key_numbers.at("TRAJECTORIES_NUMBER")),
+      //       std::stoi(C._key_numbers.at("STEPS_NUMBER")),
+      //       std::stod(C._key_numbers.at("EXP_T")),
+      //       std::stod(C._key_numbers.at("SPOT_PRICE")));
 
-      for (auto t : traj) {
-        res += ((t.back() - strike) > 0 ? (t.back() - strike) : 0);
-      }
+      // for (auto t : traj) {
+      //   res += ((t.back() - strike) > 0 ? (t.back() - strike) : 0);
+      // }
 
-      std::cout << "steps_number: "<<std::stoi(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
+      // std::cout << "steps_number: "<<std::stoi(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
 
-      for (auto tr : traj[0]) {
-        std::cout << tr << " ";
-      }
-      std::cout << "tra size: " << traj[0].size() << std::endl;
-      std::cout << std::endl;
+      // std::cout << "tra size: " << traj[0].size() << std::endl;
+      // std::cout << std::endl;
 
-      // std::function<double(double)> payoff = [strike](double v) {
-      //   return ((v - strike) > 0 ? (v - strike) : 0);
-      // };
+      std::function<double(double)> payoff = [strike](double v) {
+        return ((v - strike) > 0 ? (v - strike) : 0);
+      };
 
-      // MonteCarloResult res = bs_pricer.estimate_price(
-      //     payoff, std::stod(C._key_numbers.at("ERROR")),
-      //     std::stod(C._key_numbers.at("STEPS_NUMBER")),
-      //     std::stod(C._key_numbers.at("EXP_T")),
-      //     std::stod(C._key_numbers.at("SPOT_PRICE")),
-      //     std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")));
+      MonteCarloResult res = bs_pricer.estimate_price(
+          payoff, std::stod(C._key_numbers.at("ERROR")),
+          std::stod(C._key_numbers.at("STEPS_NUMBER")),
+          std::stod(C._key_numbers.at("EXP_T")),
+          std::stod(C._key_numbers.at("SPOT_PRICE")),
+          true, 0.95, 1000);
 
-      std::cout << res / std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::endl;
+      std::cout << "ans: "<< res << std::endl;
 
       break;
     }
@@ -200,7 +197,7 @@ int Execution::execute(Command C) {
       auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
 
       double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
-      double error = std::stod(C._key_numbers.at("ERROR"));
+      // double error = std::stod(C._key_numbers.at("ERROR"));
 
       std::function<double(double)> payoff = [strike](double v) {
         return ((strike - v) > 0 ? (strike - v) : 0);
