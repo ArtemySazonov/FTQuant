@@ -4,6 +4,10 @@
 #include <array>
 #include <vector>
 
+/** @class RectBivariateCubicSpline
+ * @brief Implementation of 2d spline interpolation on a rectangular grid.
+ * @see tests/u_RectBivariateSpline.cpp
+ */
 class RectBivariateCubicSpline {
  private:
   std::vector<double> x;

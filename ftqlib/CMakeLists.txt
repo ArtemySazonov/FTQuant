@@ -8,6 +8,8 @@ add_library(ftqlib
         BlackSholes.cpp
         LocalVolatility.cpp
 
+        # Technicalities
         RectBivariateSpline.cpp
+        ThomasAlgorithm.cpp
 )
 target_include_directories(ftqlib PUBLIC "../include/")

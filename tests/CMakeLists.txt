@@ -12,17 +12,18 @@ target_link_libraries(GTest::GTest INTERFACE gtest_main)
 
 enable_testing()
 
-add_executable(unit_tests
+add_executable(ftquant_tests
         u_MonteCarlo.cpp
         u_SyntaxParser.cpp
         u_PartialDiffEq.cpp
+        i_main.cpp
 )
 
-target_link_libraries(unit_tests PUBLIC
+target_link_libraries(ftquant_tests PUBLIC
         GTest::GTest
         ftqlib
 )
 
 include(GoogleTest)
 message(STATUS "GTest loaded")
-gtest_discover_tests(unit_tests)
+gtest_discover_tests(ftquant_tests)
