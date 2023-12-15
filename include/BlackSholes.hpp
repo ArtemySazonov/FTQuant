@@ -19,6 +19,7 @@
 #ifndef FTQUANT_BLACKSCHOLES_HPP
 #define FTQUANT_BLACKSCHOLES_HPP
 #include <vector>
+#include <functional>
 
 void thomas_algorithm(std::vector<double>& v, std::vector<double>& a,
                       std::vector<double>& b, std::vector<double>& c,
