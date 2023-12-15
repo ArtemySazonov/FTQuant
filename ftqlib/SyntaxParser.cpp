@@ -5,7 +5,7 @@
  * @see tests/u_SyntaxParser.cpp
  */
 
-#include "SyntaxParser.hpp"
+#include <SyntaxParser.hpp>
 
 bool is_double(const std::string& str) {
   std::istringstream iss(str);
@@ -81,6 +81,7 @@ std::vector<double> readStocksFromFile(std::string fname) {
   std::string line;
   std::ifstream in(fname);
   std::vector<double> ans;
+
   if (in.is_open()) {
     while (std::getline(in, line)) {
       if (is_double(line))
@@ -110,8 +111,6 @@ std::vector<std::vector<double>> read2DFromFile(std::string fname) {
       std::vector<double> numbers;
       std::string word;
 
-      int flag = 0;
-
       while (ss >> word) {
         if (is_double(word)) {
           numbers.push_back(std::stod(word));
@@ -135,9 +134,6 @@ int Execution::execute(Command C) {
   double r = 0.;
   double sigma = 1.;
 
-  traj_generated = 0;
-  isBS = 1;
-
   std::vector<std::vector<double>> w;
   std::vector<double> T;
   std::vector<double> y;
@@ -153,6 +149,16 @@ int Execution::execute(Command C) {
       break;
     }
 
+    case BLACK_SCHOLES: {
+      // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE")
+      //           << " \n";
+      BSmodel = BlackScholes(std::stod(C._key_numbers.at("INTEREST_RATE")),
+                             std::stod(C._key_numbers.at("SIGMA")));
+      isBS = 1;
+      // std::cout << "BlackScholes model(" << _key_numbers.at("INTEREST_RATE"] << " \n";
+      //  "_key_numbers.at(\"SIGMA\"]); \n";
+      break;
+    }
     case BLACK_SCHOLES: {
       // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE") << " \n";
       BSmodel = BlackScholes(std::stod(C._key_numbers.at("INTEREST_RATE")),
@@ -215,6 +221,7 @@ int Execution::execute(Command C) {
             std::stod(C._key_numbers.at("STEPS_NUMBER")),
             std::stod(C._key_numbers.at("EXP_T")));
         traj_generated = 1;
+        std::cout << "tr gen \n" << traj_generated << std::endl;
       } else {
         // std::cout << "LV Tr num, steps: " << std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")) << std::stod(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
         traj = LVmodel.generate_paths(
@@ -226,12 +233,221 @@ int Execution::execute(Command C) {
       }
       break;
     }
+    case EURO_CALL: {
+      auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
+      // double res = 0;
+
+      double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
+
+      //         traj = BSmodel.generate_paths(
+      //       std::stoi(C._key_numbers.at("TRAJECTORIES_NUMBER")),
+      //       std::stoi(C._key_numbers.at("STEPS_NUMBER")),
+      //       std::stod(C._key_numbers.at("EXP_T")),
+      //       std::stod(C._key_numbers.at("SPOT_PRICE")));
+
+      // for (auto t : traj) {
+      //   res += ((t.back() - strike) > 0 ? (t.back() - strike) : 0);
+      // }
+
+      // std::cout << "steps_number: "<<std::stoi(C._key_numbers.at("STEPS_NUMBER")) << std::endl;
+
+      // std::cout << "tra size: " << traj[0].size() << std::endl;
+      // std::cout << std::endl;
+
+      std::function<double(double)> payoff = [strike](double v) {
+        return ((v - strike) > 0 ? (v - strike) : 0);
+      };
+
+      MonteCarloResult res = bs_pricer.estimate_price(
+          payoff, std::stod(C._key_numbers.at("ERROR")),
+          std::stod(C._key_numbers.at("STEPS_NUMBER")),
+          std::stod(C._key_numbers.at("EXP_T")),
+          std::stod(C._key_numbers.at("SPOT_PRICE")), true, 0.95, 1000);
+
+      std::cout << "ans: " << res.to_json() << std::endl;
+
+      break;
+    }
+    case EURO_PUT: {
+      auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
+
+      double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
+      // double error = std::stod(C._key_numbers.at("ERROR"));
+
+      std::function<double(double)> payoff = [strike](double v) {
+        return ((strike - v) > 0 ? (strike - v) : 0);
+      };
+
+      MonteCarloResult res = bs_pricer.estimate_price(
+          payoff, std::stod(C._key_numbers.at("ERROR")),
+          std::stod(C._key_numbers.at("STEPS_NUMBER")),
+          std::stod(C._key_numbers.at("EXP_T")),
+          std::stod(C._key_numbers.at("SPOT_PRICE")),
+          std::stod(C._key_numbers.at("TRAJECTORIES_NUMBER")));
+
+      std::cout << res.to_json() << std::endl;
+
+      break;
+    }
+    // case PUT_KNOCK_OUT: {
+    //   auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
+
+    //   double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
+    //   double l_barrier = std::stod(C._key_numbers.at("LOWER_BARRIER"));
+
+    //   const std::function<double(std::vector<double>)> payoff =
+    //       [strike, l_barrier](std::vector<double> v) {
+    //         double m = std::min_element(std::begin(v), std::end(v));
+    //         if (m <= l_barrier)
+    //           return 0.;
+    //         return ((strike - v.back()) > 0 ? (strike - v.back()) : 0);
+    //       };
+
+    //   MonteCarloResult res = bs_pricer.estimate_price(
+    //       payoff, std::stod(C._key_numbers.at("ERROR")));
+
+    //   std::cout << res.to_json() << std::endl;
+
+    //   break;
+    // }
+    // case CALL_KNOCK_OUT: {
+    //   auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
+
+    //   double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
+    //   double l_barrier = std::stod(C._key_numbers.at("LOWER_BARRIER"));
+
+    //   const std::function<double(std::vector<double>)> payoff =
+    //       [strike, l_barrier](std::vector<double> v) {
+    //         double m = std::min_element(std::begin(v), std::end(v));
+    //         if (m <= l_barrier)
+    //           return 0.;
+    //         return ((v.back() - strike) > 0 ? (v.back() - strike) : 0);
+    //       };
+
+    //   MonteCarloResult res = bs_pricer.estimate_price(
+    //       payoff, std::stod(C._key_numbers.at("ERROR")));
+
+    //   std::cout << res.to_json() << std::endl;
+
+    //   break;
+    // }
+    // case PUT_KNOCK_IN: {
+    //   auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
+
+    //   double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
+    //   double u_barrier = std::stod(C._key_numbers.at("UPPER_BARRIER"));
+
+    //   const std::function<double(std::vector<double>)> payoff =
+    //       [strike, u_barrier](std::vector<double> v) {
+    //         double m = std::min_element(std::begin(v), std::end(v));
+    //         if (m >= u_barrier)
+    //           ((strike - v.back()) > 0 ? (strike - v.back()) : 0);
+    //         return 0.;
+    //       };
+
+    //   MonteCarloResult res = bs_pricer.estimate_price(
+    //       payoff, std::stod(C._key_numbers.at("ERROR")));
+
+    //   std::cout << res.to_json() << std::endl;
+
+    //   break;
+    // }
+    // case CALL_KNOCK_IN: {
+    //   auto bs_pricer = MonteCarloPricer<BlackScholes>(BSmodel);
+
+    //   double strike = std::stod(C._key_numbers.at("STRIKE_PRICE"));
+    //   double u_barrier = std::stod(C._key_numbers.at("UPPER_BARRIER"));
+
+    //   const std::function<double(std::vector<double>)> payoff =
+    //       [strike, u_barrier](std::vector<double> v) {
+    //         double m = std::min_element(std::begin(v), std::end(v));
+    //         if (m >= u_barrier)
+    //           return ((v.back() - strike) > 0 ? (v.back() - strike) : 0);
+    //         return 0.;
+    //       };
+
+    //   MonteCarloResult res = bs_pricer.estimate_price(
+    //       payoff, std::stod(C._key_numbers.at("ERROR")));
+
+    //   std::cout << res.to_json() << std::endl;
+
+    //   break;
+    // }
     default: {
       return -1;
       break;
     }
   }
   return 0;
+}
+
+Command::Command(std::string com) {
+  std::stringstream ss(com);
+  std::vector<std::string> words;
+
+  std::string temp;
+
+  int flag = 0;
+  std::string word;
+  ss >> word;
+  if (Commands.count(word)) {
+    _code = Commands[word];
+  } else {
+    _code = Commands["INVALID_COMMAND"];
+    std::cout << "Wrong key word \n";
+    return;
+  }
+
+  while (ss >> word) {
+    words.push_back(word);
+  }
+
+  for (const auto& w : words) {
+    if (Fields.count(w)) {
+      if (!flag) {
+        _key_numbers[w] = "0";
+        flag = 1;
+        temp = w;
+      }
+      continue;
+    }
+
+    if (flag == 1) {
+      if (isDouble(w) || temp == "FILE")
+        _key_numbers[temp] = w;
+      else {
+        std::cout << "cant convert " << w << " in double \n";
+        std::cout << "1021 cant be turned into double \n";
+        _code = INVALID_COMMAND;
+        return;
+      }
+      flag = 0;
+    }
+  }
+
+  for (auto& w : RequiredFields[_code]) {
+    // std::cout << w << " ";
+    if (!_key_numbers.count(w)) {
+      std::cout << "not all required fields: ";
+      std::cout << w << " is absence \n";
+      _code = INVALID_COMMAND;
+    }
+  }
+}
+
+int Command::code() const {
+  return _code;
+}
+
+std::string Command::to_json() const {
+  std::string json = "{";
+  json += "code: " + std::to_string(_code) + ", " + "keyNumbers: ";
+  for (const auto& [key, value] : _key_numbers)
+    json += '[' + key + "] = " + value + "; ";
+
+  json += '}';
+
+  return json;
 }
 
 std::ostream& operator<<(std::ostream& os, const Command& C) {

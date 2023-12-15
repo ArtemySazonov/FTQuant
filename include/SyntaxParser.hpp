@@ -3,12 +3,14 @@
 
 #include <ftqlib.hpp>
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <map>
-#include <string>
 #include <sstream>
+#include <string>
 #include <string_view>
+#include <vector>
 
 namespace {
 /** @var Fields
@@ -16,20 +18,34 @@ namespace {
  * Saves the command keywords: names of all the available commands.
  */
 std::map<std::string, int> Fields{
+    /**
+ * Saves the command keywords: names of all the available commands.
+ */
     {"INTEREST_RATE", 0}, {"TRAJECTORIES_NUMBER", 2},
     {"STEPS_NUMBER", 4},  {"SIGMA", 6},
     {"FILE", 7},          {"EXP_T", 8},
     {"SPOT_PRICE", 9},    {"FILE_W", 10},
     {"FILE_T", 12},       {"FILE_y", 13},
+    {"STOCK_PRICE", 14},  {"STRIKE_PRICE", 15},
+    {"ERROR", 16},        {"LOWER_BARRIER", 17},
+    {"UPPER_BARRIER", 18}
     // {"ANTITHETIC", 10}
 };
 
 /** @var Commands
  * Contains the command keywords: names of all the available commands.
  */
-std::map<std::string, int> Commands{
-    {"INVALID_COMMAND", -1},      {"BLACK_SCHOLES", 0}, {"LOCVOL", 1},
-    {"GENERATE_TRAJECTORIES", 2}, {"EURO_PUT", 3},      {"EURO_CALL", 4}};
+std::map<std::string, int> Commands{{"INVALID_COMMAND", -1},
+                                    {"BLACK_SCHOLES", 0},
+                                    {"BLACK_SCHOLES_F", 1},
+                                    {"LOCVOL", 2},
+                                    {"GENERATE_TRAJECTORIES", 3},
+                                    {"EURO_PUT", 4},
+                                    {"EURO_CALL", 5},
+                                    {"PUT_KNOCK_OUT", 6},
+                                    {"CALL_KNOCK_OUT", 7},
+                                    {"PUT_KNOCK_IN", 8},
+                                    {"CALL_KNOCK_IN", 9}};
 
 /** @var Codes
  * @brief Container for command codes
@@ -42,7 +58,11 @@ enum Codes {
   LOCVOL = 2,
   GENERATE_TRAJECTORIES = 3,
   EURO_PUT = 4,
-  EURO_CALL = 5
+  EURO_CALL = 5,
+  PUT_KNOCK_OUT = 6,
+  CALL_KNOCK_OUT = 7,
+  PUT_KNOCK_IN = 8,
+  CALL_KNOCK_IN = 9,
 };
 
 /** @var RequiredFields
@@ -55,8 +75,14 @@ std::vector<std::vector<std::string>> RequiredFields{
     {"INTEREST_RATE", "FILE"},
     {"FILE_w", "FILE_T", "FILE_y", "SPOT_PRICE"},
     {"TRAJECTORIES_NUMBER", "STEPS_NUMBER", "EXP_T", "SPOT_PRICE"},
-    {"STOCK_PRICE", "STRIKE_PRICE"},
-    {"STOCK_PRICE", "STRIKE_PRICE"}};
+    {"ERROR", "STRIKE_PRICE", "TRAJECTORIES_NUMBER", "STEPS_NUMBER", "EXP_T",
+     "SPOT_PRICE"},
+    {"ERROR", "STRIKE_PRICE", "TRAJECTORIES_NUMBER", "STEPS_NUMBER", "EXP_T",
+     "SPOT_PRICE"},
+    {"ERROR", "STRIKE_PRICE", "LOWER_BARRIER"},
+    {"ERROR", "STRIKE_PRICE", "LOWER_BARRIER"},
+    {"ERROR", "STRIKE_PRICE", "UPPER_BARRIER"},
+    {"ERROR", "STRIKE_PRICE", "UPPER_BARRIER"}};
 }  // namespace
 
 /** @function is_double
@@ -89,8 +115,8 @@ class Command {
 
 class Execution {
  private:
-  int traj_generated;
-  int isBS;
+  int traj_generated = 0;
+  int isBS = 1;
   std::vector<std::vector<double>> traj;
   std::vector<std::vector<double>> w;
   std::vector<double> T;
