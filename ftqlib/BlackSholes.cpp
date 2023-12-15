@@ -1,6 +1,6 @@
 #include <algorithm>
-#include <random>
 #include <iostream>
+#include <random>
 
 #include <BlackSholes.hpp>
 
@@ -70,8 +70,7 @@ void BlackScholes::calibrate(std::vector<double>& stock_prices) {
 
 std::vector<std::vector<double>> BlackScholes::pde_pricer(
     double r, double sigma, double T, std::function<double(double)> payoff,
-    double S_max, double S_min, int M, int N)
-{
+    double S_max, double S_min, int M, int N) {
   double h = (S_max - S_min) / N;               //s step
   double tau = T / M;                           //time step
   std::vector<std::vector<double>> u;           // create a return matrix

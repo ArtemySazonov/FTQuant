@@ -159,15 +159,6 @@ int Execution::execute(Command C) {
       //  "_key_numbers.at(\"SIGMA\"]); \n";
       break;
     }
-    case BLACK_SCHOLES: {
-      // std::cout << "BlackScholes model(" << C._key_numbers.at("INTEREST_RATE") << " \n";
-      BSmodel = BlackScholes(std::stod(C._key_numbers.at("INTEREST_RATE")),
-                             std::stod(C._key_numbers.at("SIGMA")));
-      isBS = 1;
-      // std::cout << "BlackScholes model(" << _key_numbers.at("INTEREST_RATE"] << " \n";
-      //  "_key_numbers.at(\"SIGMA\"]); \n";
-      break;
-    }
 
     case BLACK_SCHOLES_F: {
       // std::cout << "BlackScholes model(" << C._key_numbers.at("FILE") << " \n";
@@ -379,75 +370,6 @@ int Execution::execute(Command C) {
     }
   }
   return 0;
-}
-
-Command::Command(std::string com) {
-  std::stringstream ss(com);
-  std::vector<std::string> words;
-
-  std::string temp;
-
-  int flag = 0;
-  std::string word;
-  ss >> word;
-  if (Commands.count(word)) {
-    _code = Commands[word];
-  } else {
-    _code = Commands["INVALID_COMMAND"];
-    std::cout << "Wrong key word \n";
-    return;
-  }
-
-  while (ss >> word) {
-    words.push_back(word);
-  }
-
-  for (const auto& w : words) {
-    if (Fields.count(w)) {
-      if (!flag) {
-        _key_numbers[w] = "0";
-        flag = 1;
-        temp = w;
-      }
-      continue;
-    }
-
-    if (flag == 1) {
-      if (isDouble(w) || temp == "FILE")
-        _key_numbers[temp] = w;
-      else {
-        std::cout << "cant convert " << w << " in double \n";
-        std::cout << "1021 cant be turned into double \n";
-        _code = INVALID_COMMAND;
-        return;
-      }
-      flag = 0;
-    }
-  }
-
-  for (auto& w : RequiredFields[_code]) {
-    // std::cout << w << " ";
-    if (!_key_numbers.count(w)) {
-      std::cout << "not all required fields: ";
-      std::cout << w << " is absence \n";
-      _code = INVALID_COMMAND;
-    }
-  }
-}
-
-int Command::code() const {
-  return _code;
-}
-
-std::string Command::to_json() const {
-  std::string json = "{";
-  json += "code: " + std::to_string(_code) + ", " + "keyNumbers: ";
-  for (const auto& [key, value] : _key_numbers)
-    json += '[' + key + "] = " + value + "; ";
-
-  json += '}';
-
-  return json;
 }
 
 std::ostream& operator<<(std::ostream& os, const Command& C) {

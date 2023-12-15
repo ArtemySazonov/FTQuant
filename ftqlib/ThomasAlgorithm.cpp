@@ -1,5 +1,5 @@
-#include <vector>
 #include <BlackSholes.hpp>
+#include <vector>
 
 /** Implementation of Thomas algorithm for tridiagonal matrices
  * @brief Thomas tridiagonal matrix algorithm
@@ -7,8 +7,8 @@
  * @param v the desired approximation of the function obtained by the run-through method. Has indexes from 1 to n
  */
 void thomas_algorithm(std::vector<double>& v, std::vector<double>& a,
-                     std::vector<double>& b, std::vector<double>& c,
-                     std::vector<double>& f) {
+                      std::vector<double>& b, std::vector<double>& c,
+                      std::vector<double>& f) {
   size_t n = a.size() - 1;
 
   std::vector<double> alpha;

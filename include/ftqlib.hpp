@@ -71,6 +71,16 @@ class MonteCarloPricer {
  public:
   MonteCarloPricer(T model) : model(model) {}
 
+  /** A function that estimates the price of a given derivative via a Monte-Carlo simulation with a chosen method.
+   * @brief Estimates the price of a derivative via a Monte-Carlo simulation.
+   * @param payoff The payoff function of the derivative.
+   * @param absolute_error The absolute error of the simulation we want to have.
+   * @param confidence_level The confidence level of the simulation we want to have.
+   * @param num_simulations_per_round The number of Monte-Carlo simulations per round.
+   * @return A MonteCarloResult object.
+   * @see MonteCarloResult
+   * @see MonteCarloPricer
+   */
   MonteCarloResult estimate_price(std::function<double(double)> payoff,
                                   double absolute_error, int steps, double time,
                                   double spot, bool antithetic = true,

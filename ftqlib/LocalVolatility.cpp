@@ -45,9 +45,10 @@ int LocalVolatility::calibrate_dupire(std::vector<std::vector<double>>& omega,
                                       std::vector<double>& y, double spot) {
   RectBivariateCubicSpline w;
   w.fit(T, y, omega);
+  double r_ = r;
 
-  auto glambda = [w, r, spot](double t, double k) {
-    double y_ = log(k / exp(r * t) * spot);
+  auto glambda = [w, r_, spot](double t, double k) {
+    double y_ = log(k / exp(r_ * t) * spot);
     double w_ev = w.eval(t, y_);
     double Dx_w = w.partial_derivative(t, k, 0, 1);
     double D2x_w = w.partial_derivative(t, k, 0, 2);
